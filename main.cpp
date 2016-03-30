@@ -124,11 +124,14 @@ static unsigned int setup_shader(const char *vertex_shader, const char *fragment
 	return program;
 }
 
+/* Create a string containing all contents in the specific file.
+ */
 static std::string readfile(const char *filename)
 {
 	std::ifstream ifs(filename);
 	if(!ifs)
 		exit(EXIT_FAILURE);
+	// Copy string from input stream to EOF.
 	return std::string( (std::istreambuf_iterator<char>(ifs)),
 			(std::istreambuf_iterator<char>()));
 }
