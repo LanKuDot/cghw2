@@ -36,8 +36,16 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 		glfwSetWindowShouldClose(window, GL_TRUE);
 }
 
+/* Load and compile the vertex shader and fragment shader, and link them to a program object.
+ * Parameter:
+ * - vertex_shader: The char array contains the source code of vertex shader.
+ * - fragment_shader: The char array contains the source code of fragment shader.
+ * Return:
+ * - The reference address to the created program
+ */
 static unsigned int setup_shader(const char *vertex_shader, const char *fragment_shader)
 {
+	// Compile the vertex shader
 	GLuint vs=glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vs, 1, (const GLchar**)&vertex_shader, nullptr);
 
@@ -63,6 +71,7 @@ static unsigned int setup_shader(const char *vertex_shader, const char *fragment
 		return 0;
 	}
 
+	// Compile the fragment shader
 	GLuint fs=glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fs, 1, (const GLchar**)&fragment_shader, nullptr);
 	glCompileShader(fs);
