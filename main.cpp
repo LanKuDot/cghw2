@@ -324,7 +324,7 @@ int main(int argc, char *argv[])
 	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	// Matrix for transform pipeline of 'program': M_pers * M_camera * M_model
-	// - Model position: orignal, no scale, no rotation.
+	// - Model translation: orignal, no scale, no rotation.
 	// - Camera: eye @ ( 20, 0, 0 ), look @ ( 0, 0, 0 ), Vup = ( 0, 1, 0 ).
 	// - Perspective volume: fovy = 45 deg, aspect( x = 640, y = 480 ), zNear = 1, zFar = 100.
 	setUniformMat4(program, "vp", glm::perspective(glm::radians(45.0f), 640.0f/480, 1.0f, 100.f)*
