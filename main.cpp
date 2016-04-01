@@ -311,8 +311,8 @@ int main(int argc, char *argv[])
 	glfwSetKeyCallback(window, key_callback);
 
 	// load shader program
-	program = setup_shader(readfile("vs.txt").c_str(), readfile("fs.txt").c_str());
-	program2 = setup_shader(readfile("vs.txt").c_str(), readfile("fs.txt").c_str());
+	program = setup_shader(readfile("vs.glsl").c_str(), readfile("fs.glsl").c_str());
+	program2 = setup_shader(readfile("vs.glsl").c_str(), readfile("fs.glsl").c_str());
 
 	int sun = add_obj(program, "sun.obj","sun.bmp");
 	int earth = add_obj(program, "earth.obj","earth.bmp");
