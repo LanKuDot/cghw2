@@ -252,6 +252,8 @@ static int add_obj(unsigned int program, const char *filename,const char *texbmp
 	return objects.size()-1;
 }
 
+/* Delete all information of all objects in the rendering list.
+ */
 static void releaseObjects()
 {
 	for(int i=0;i<objects.size();i++){
