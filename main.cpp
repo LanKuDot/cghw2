@@ -264,6 +264,12 @@ static void releaseObjects()
 	glDeleteProgram(program);
 }
 
+/* Assign a new value to the mat4 variable of the specified shader program.
+ * Parameter:
+ * - program: At which shader program the mat4 variable that you want to assign is.
+ * - name: The name of that variable
+ * - mat: The new value
+ */
 static void setUniformMat4(unsigned int program, const std::string &name, const glm::mat4 &mat)
 {
 	// This line can be ignore. But, if you have multiple shader program
