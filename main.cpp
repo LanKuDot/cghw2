@@ -290,7 +290,10 @@ static void render()
 		glUseProgram(objects[i].program);
 		glBindVertexArray(objects[i].vao);
 		glBindTexture(GL_TEXTURE_2D, objects[i].texture);
+
 		//you should send some data to shader here
+		setUniformMat4(program, "model", objects[i].model);
+
 		glDrawElements(GL_TRIANGLES, indicesCount[i], GL_UNSIGNED_INT, nullptr);
 	}
 	glBindVertexArray(0);
@@ -348,14 +351,17 @@ int main(int argc, char *argv[])
 			glm::lookAt(glm::vec3(20.0f), glm::vec3(), glm::vec3(0, 1, 0))*glm::mat4(1.0f));
 	// camera for 'program2': orthogonal volume
 	setUniformMat4(program2, "vp", glm::mat4(1.0));
+
+	// Initial position setting
 	glm::mat4 tl=glm::translate(glm::mat4(), glm::vec3(15.0f,0.0f,0.0));
 	glm::mat4 rot;
 	glm::mat4 rev;
+	objects[sun].model = glm::scale(glm::mat4(1.0f), glm::vec3(0.85f));
+	objects[earth].model = tl;
 
 	float last, start;
 	last = start = glfwGetTime();
 	int fps=0;
-	objects[sun].model = glm::scale(glm::mat4(1.0f), glm::vec3(0.85f));
 	while (!glfwWindowShouldClose(window))
 	{//program will keep draw here until you close the window
 		float delta = glfwGetTime() - start;

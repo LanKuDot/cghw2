@@ -15,5 +15,5 @@ void main()
 	fTexcoord=texcoord;
 	
 	// Transfrom current vertex to clip-space position.
-	gl_Position = vp * vec4(position, 1.0);
+	gl_Position = vp * model * vec4(position, 1.0);
 }
