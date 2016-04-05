@@ -331,11 +331,11 @@ int main(int argc, char *argv[])
 	program = setup_shader(readfile("vs.glsl").c_str(), readfile("fs.glsl").c_str());
 	program2 = setup_shader(readfile("vs.glsl").c_str(), readfile("fs.glsl").c_str());
 
-	int sun = add_obj(program, "sun.obj","sun.bmp");
-	int earth = add_obj(program, "earth.obj","earth.bmp");
+	int sun = add_obj(program, "sun.obj", "sun.bmp");
+	int earth = add_obj(program, "earth.obj", "earth.bmp");
 
 	glEnable(GL_DEPTH_TEST);
-	 glCullFace(GL_BACK);
+	glCullFace(GL_BACK);
 	// Enable blend mode for billboard
 	//glEnable(GL_BLEND);
 	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -348,7 +348,7 @@ int main(int argc, char *argv[])
 			glm::lookAt(glm::vec3(20.0f), glm::vec3(), glm::vec3(0, 1, 0))*glm::mat4(1.0f));
 	// camera for 'program2': orthogonal volume
 	setUniformMat4(program2, "vp", glm::mat4(1.0));
-	glm::mat4 tl=glm::translate(glm::mat4(),glm::vec3(15.0f,0.0f,0.0));
+	glm::mat4 tl=glm::translate(glm::mat4(), glm::vec3(15.0f,0.0f,0.0));
 	glm::mat4 rot;
 	glm::mat4 rev;
 
