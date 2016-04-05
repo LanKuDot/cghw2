@@ -168,6 +168,14 @@ static unsigned char *load_bmp(const char *bmp, unsigned int *width, unsigned in
 	return result;
 }
 
+/* Add a object to rendering list.
+ * Parameters:
+ * - program: Which shader program this object should use
+ * - filename: The object file of this object
+ * - texbmp: The texture file for this object
+ * Return:
+ * - The index of this obejct in the rendering list.
+ */
 static int add_obj(unsigned int program, const char *filename,const char *texbmp)
 {
 	object_struct new_node;
@@ -183,6 +191,7 @@ static int add_obj(unsigned int program, const char *filename,const char *texbmp
 		exit(1);
 	}
 
+	// Create spaces for vertex array object, vertex buffer objects, and texture object.
 	glGenVertexArrays(1, &new_node.vao);
 	glGenBuffers(4, new_node.vbo);
 	glGenTextures(1, &new_node.texture);
@@ -195,17 +204,17 @@ static int add_obj(unsigned int program, const char *filename,const char *texbmp
 			shapes[0].mesh.positions.data(), GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+	// Upload texCoord array and texture arary
 	if(shapes[0].mesh.texcoords.size()>0)
 	{
-
-		// Upload texCoord array
 		glBindBuffer(GL_ARRAY_BUFFER, new_node.vbo[1]);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*shapes[0].mesh.texcoords.size(),
 				shapes[0].mesh.texcoords.data(), GL_STATIC_DRAW);
 		glEnableVertexAttribArray(1);
 		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
-		glBindTexture( GL_TEXTURE_2D, new_node.texture);
+		glBindTexture(GL_TEXTURE_2D, new_node.texture);
 		unsigned int width, height;
 		unsigned short int bits;
 		unsigned char *bgr=load_bmp(texbmp, &width, &height, &bits);
@@ -217,13 +226,12 @@ static int add_obj(unsigned int program, const char *filename,const char *texbmp
 		delete [] bgr;
 	}
 
+	// Upload normal array
 	if(shapes[0].mesh.normals.size()>0)
 	{
-		// Upload normal array
 		glBindBuffer(GL_ARRAY_BUFFER, new_node.vbo[2]);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*shapes[0].mesh.normals.size(),
 				shapes[0].mesh.normals.data(), GL_STATIC_DRAW);
-
 		glEnableVertexAttribArray(2);
 		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	}
@@ -235,6 +243,7 @@ static int add_obj(unsigned int program, const char *filename,const char *texbmp
 
 	indicesCount.push_back(shapes[0].mesh.indices.size());
 
+	// Unbind the vao of this object
 	glBindVertexArray(0);
 
 	new_node.program = program;
