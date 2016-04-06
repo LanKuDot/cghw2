@@ -345,7 +345,7 @@ int main(int argc, char *argv[])
 
 	// Matrix for transform pipeline of 'program': M_pers * M_camera * M_model
 	// - Model translation: orignal, no scale, no rotation.
-	// - Camera: eye @ ( 20, 0, 0 ), look @ ( 0, 0, 0 ), Vup = ( 0, 1, 0 ).
+	// - Camera: eye @ ( 20, 20, 20 ), look @ ( 0, 0, 0 ), Vup = ( 0, 1, 0 ).
 	// - Perspective volume: fovy = 45 deg, aspect( x = 640, y = 480 ), zNear = 1, zFar = 100.
 	setUniformMat4(program, "vp", glm::perspective(glm::radians(45.0f), 640.0f/480, 1.0f, 100.f)*
 			glm::lookAt(glm::vec3(20.0f), glm::vec3(), glm::vec3(0, 1, 0))*glm::mat4(1.0f));
