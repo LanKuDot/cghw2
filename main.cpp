@@ -7,11 +7,11 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/rotate_vector.hpp>
 #include <vector>
 #include "tiny_obj_loader.h"
 
 #define GLM_FORCE_RADIANS
-
 
 struct object_struct{
 	unsigned int program;
@@ -335,6 +335,23 @@ void initalPlanets()
 	}
 }
 
+/* Update the model matrix of each planet per frame accroding to the status of the earth.
+ * Parameters:
+ * - earth_revDeg2Rad: The current revolution degree of the earth in radius.
+ */
+void updatePlanets(float earth_revDeg2Rad)
+{
+	float revRadius_planet, revRad_planet;
+
+	for (int i = 0; i < NUM_OF_PLANETS; ++i) {
+		revRadius_planet = EARTH_REV_RADIUS * planet_info[i].revRadius_ratio;
+		revRad_planet = earth_revDeg2Rad * planet_info[i].revPeriod_ratio;
+
+		objects[i].model = glm::translate(glm::mat4(1.0f),
+				glm::rotateY(glm::vec3(revRadius_planet, 0.0f, 0.0f), revRad_planet));
+	}
+}
+
 int main(int argc, char *argv[])
 {
 	GLFWwindow* window;
@@ -389,11 +406,17 @@ int main(int argc, char *argv[])
 	initalPlanets();
 
 	float last, start;
+	float earthDegNow = 0.0f;
 	last = start = glfwGetTime();
 	int fps=0;
 	while (!glfwWindowShouldClose(window))
 	{//program will keep draw here until you close the window
 		float delta = glfwGetTime() - start;
+
+		earthDegNow += 1.0f;
+		if ( earthDegNow > 359.9f ) earthDegNow = 0.0f;
+		updatePlanets(3.1415926f / 180.0f * earthDegNow);
+
 		render();
 		glfwSwapBuffers(window);
 		glfwPollEvents();
