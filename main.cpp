@@ -315,6 +315,26 @@ static void render()
 	glBindVertexArray(0);
 }
 
+/* Add planets to the rendering list and initialize the position and size of the planets.
+ */
+void initalPlanets()
+{
+	// Add planets to the rendering list
+	add_obj(program, "sun.obj", "sun.bmp");
+	add_obj(program, "earth.obj", "earth.bmp");
+	add_obj(program, "earth.obj", "mars.bmp");
+
+	// Initialize the model matrix
+	objects[SUN].model = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
+	float revRadius_planet;
+
+	for (int i = 1; i < NUM_OF_PLANETS; ++i) {
+		revRadius_planet = EARTH_REV_RADIUS * planet_info[i].revRadius_ratio;
+
+		objects[i].model = glm::translate(glm::mat4(1.0f), glm::vec3(revRadius_planet, 0.0f, 0.0f));
+	}
+}
+
 int main(int argc, char *argv[])
 {
 	GLFWwindow* window;
@@ -350,9 +370,6 @@ int main(int argc, char *argv[])
 	program = setup_shader(readfile("vs.glsl").c_str(), readfile("fs.glsl").c_str());
 	program2 = setup_shader(readfile("vs.glsl").c_str(), readfile("fs.glsl").c_str());
 
-	int sun = add_obj(program, "sun.obj", "sun.bmp");
-	int earth = add_obj(program, "earth.obj", "earth.bmp");
-
 	glEnable(GL_DEPTH_TEST);
 	glCullFace(GL_BACK);
 	// Enable blend mode for billboard
@@ -368,12 +385,8 @@ int main(int argc, char *argv[])
 	// camera for 'program2': orthogonal volume
 	setUniformMat4(program2, "vp", glm::mat4(1.0));
 
-	// Initial position setting
-	glm::mat4 tl=glm::translate(glm::mat4(), glm::vec3(15.0f,0.0f,0.0));
-	glm::mat4 rot;
-	glm::mat4 rev;
-	objects[sun].model = glm::scale(glm::mat4(1.0f), glm::vec3(0.85f));
-	objects[earth].model = tl;
+	// Initialize the plantes
+	initalPlanets();
 
 	float last, start;
 	last = start = glfwGetTime();
