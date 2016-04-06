@@ -20,11 +20,27 @@ struct object_struct{
 	unsigned int texture;
 	glm::mat4 model;
 	object_struct(): model(glm::mat4(1.0f)){}
-} ;
+};
 
 std::vector<object_struct> objects;//vertex array object,vertex buffer object and texture(color) for objs
 unsigned int program, program2;
 std::vector<int> indicesCount;//Number of indice of objs
+
+#include "planets.h"
+
+#define EARTH_REV_RADIUS 15.0f
+#define EARTH_RADIUS 1.0f
+
+/* Initialize the revolution radius, revolution period, rotate period, and radius ratio of
+ * the planets to the earth, which you perfer to use in this program.
+ * Therefore, the values set here are not equal to the real ratio in the solar system!
+ */
+static PlanetInfo planet_info[NUM_OF_PLANETS] = {
+// { revRadius, revPeriod, rotPeriod, radius } ratio to the earth
+	{ 0.0f, 0.0f, 0.0f, 100.0f },    // SUN, the value is not used here.
+	{ 1.0f, 1.0f, 1.0f, 1.0f },      // EARTH
+	{ 0.8f, 2.0f, 1.0f, 1.0f }       // MARS
+};
 
 static void error_callback(int error, const char* description)
 {
