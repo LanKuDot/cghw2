@@ -30,6 +30,7 @@ std::vector<int> indicesCount;//Number of indice of objs
 
 #define EARTH_REV_RADIUS 15.0f
 #define EARTH_RADIUS 1.0f
+#define EARTH_SCALE_SIZE 0.8f
 
 /* Initialize the revolution radius, revolution period, rotate period, and radius ratio of
  * the planets to the earth, which you perfer to use in this program.
@@ -39,7 +40,7 @@ static PlanetInfo planet_info[NUM_OF_PLANETS] = {
 // { revRadius, revPeriod, rotPeriod, radius } ratio to the earth
 	{ 0.0f, 0.0f, 0.0f, 100.0f },    // SUN, the value is not used here.
 	{ 1.0f, 1.0f, 1.0f, 1.0f },      // EARTH
-	{ 0.8f, 2.0f, 1.0f, 1.0f }       // MARS
+	{ 0.8f, 2.0f, 1.0f, 0.5f }       // MARS
 };
 
 static void error_callback(int error, const char* description)
@@ -334,14 +335,16 @@ void initalPlanets()
  */
 void updatePlanets(float earth_revDeg2Rad)
 {
-	float revRadius_planet, revRad_planet;
+	float revRadius_planet, revRad_planet, size_planet;
 
-	for (int i = 0; i < NUM_OF_PLANETS; ++i) {
+	for (int i = 1; i < NUM_OF_PLANETS; ++i) {
 		revRadius_planet = EARTH_REV_RADIUS * planet_info[i].revRadius_ratio;
 		revRad_planet = earth_revDeg2Rad * planet_info[i].revPeriod_ratio;
+		size_planet = EARTH_SCALE_SIZE * planet_info[i].planetRadius_ratio;
 
 		objects[i].model = glm::translate(glm::mat4(1.0f),
-				glm::rotateY(glm::vec3(revRadius_planet, 0.0f, 0.0f), revRad_planet));
+				glm::rotateY(glm::vec3(revRadius_planet, 0.0f, 0.0f), revRad_planet)) *
+			glm::scale(glm::mat4(1.0f), glm::vec3(size_planet));
 	}
 }
 
