@@ -342,9 +342,9 @@ void updatePlanets(float earth_revDeg2Rad)
 		revRad_planet = earth_revDeg2Rad * planet_info[i].revPeriod_ratio;
 		size_planet = EARTH_SCALE_SIZE * planet_info[i].planetRadius_ratio;
 
-		objects[i].model = glm::translate(glm::mat4(1.0f),
-				glm::rotateY(glm::vec3(revRadius_planet, 0.0f, 0.0f), revRad_planet)) *
-			glm::scale(glm::mat4(1.0f), glm::vec3(size_planet));
+		objects[i].model = glm::scale(glm::translate(glm::mat4(1.0f),
+				glm::rotateY(glm::vec3(revRadius_planet, 0.0f, 0.0f), revRad_planet)),
+			glm::vec3(size_planet));
 	}
 }
 
