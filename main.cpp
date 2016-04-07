@@ -315,7 +315,7 @@ static void render()
 	glBindVertexArray(0);
 }
 
-/* Add planets to the rendering list and initialize the position and size of the planets.
+/* Add planets to the rendering list and initialize the model matrix of the sun.
  */
 void initalPlanets()
 {
@@ -326,13 +326,6 @@ void initalPlanets()
 
 	// Initialize the model matrix
 	objects[SUN].model = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
-	float revRadius_planet;
-
-	for (int i = 1; i < NUM_OF_PLANETS; ++i) {
-		revRadius_planet = EARTH_REV_RADIUS * planet_info[i].revRadius_ratio;
-
-		objects[i].model = glm::translate(glm::mat4(1.0f), glm::vec3(revRadius_planet, 0.0f, 0.0f));
-	}
 }
 
 /* Update the model matrix of each planet per frame accroding to the status of the earth.
