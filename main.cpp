@@ -300,6 +300,19 @@ static void setUniformMat4(unsigned int program, const std::string &name, const 
 	glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(mat));
 }
 
+/* The same as setUniformMat4 but set a float value.
+ * Parameter:
+ * - f: The new float value
+ */
+static void setUniformFloat(unsigned int program, const std::string &name, const float f)
+{
+	glUseProgram(program);
+	GLint loc = glGetUniformLocation(program, name.c_str());
+	if (loc == -1) return;
+
+	glUniform1f(loc, f);
+}
+
 static void render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
