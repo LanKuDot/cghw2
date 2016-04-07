@@ -411,7 +411,7 @@ int main(int argc, char *argv[])
 
 		earthDegNow += 1.0f;
 		if ( earthDegNow > 359.9f ) earthDegNow = 0.0f;
-		updatePlanets(3.1415926f / 180.0f * earthDegNow);
+		updatePlanets(glm::radians(earthDegNow));
 
 		render();
 		glfwSwapBuffers(window);
