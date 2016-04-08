@@ -31,6 +31,7 @@ std::vector<int> indicesCount;//Number of indice of objs
 #define EARTH_REV_RADIUS 15.0f
 #define EARTH_RADIUS 1.0f
 #define EARTH_SCALE_SIZE 0.8f
+static float earthSelfRotNow = 0.0f;
 
 /* Initialize the revolution radius, revolution period, rotate period, and radius ratio of
  * the planets to the earth, which you perfer to use in this program.
@@ -323,6 +324,7 @@ static void render()
 
 		//you should send some data to shader here
 		setUniformMat4(program, "model", objects[i].model);
+		setUniformFloat(program, "rotateDeg", earthSelfRotNow * planet_info[i].rotPeriod_ratio);
 
 		glDrawElements(GL_TRIANGLES, indicesCount[i], GL_UNSIGNED_INT, nullptr);
 	}
@@ -423,7 +425,9 @@ int main(int argc, char *argv[])
 		float delta = glfwGetTime() - start;
 
 		earthDegNow += 1.0f;
-		if ( earthDegNow > 359.9f ) earthDegNow = 0.0f;
+		if (earthDegNow > 359.9f) earthDegNow = 0.0f;
+		earthSelfRotNow += 1.0f;
+		if (earthSelfRotNow > 360.0f) earthSelfRotNow = 0.0f;
 		updatePlanets(glm::radians(earthDegNow));
 
 		render();
