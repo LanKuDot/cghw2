@@ -322,7 +322,6 @@ static void render()
 		glBindVertexArray(objects[i].vao);
 		glBindTexture(GL_TEXTURE_2D, objects[i].texture);
 
-		//you should send some data to shader here
 		setUniformMat4(program, "model", objects[i].model);
 		setUniformFloat(program, "rotateDeg", earthSelfRotNow * planet_info[i].rotPeriod_ratio);
 
