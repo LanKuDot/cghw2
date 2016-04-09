@@ -344,6 +344,7 @@ static void render()
 }
 
 /* Add planets to the rendering list and initialize the model matrix of the sun.
+ * Proceed the position and the color of the SUN to the rendering program.
  */
 void initalPlanets()
 {
@@ -352,8 +353,13 @@ void initalPlanets()
 	add_obj(program, "earth.obj", "earth.bmp");
 	add_obj(program, "earth.obj", "mars.bmp");
 
-	// Initialize the model matrix
+	// Initialize the model matrix, the position, and the light color of the SUN.
 	objects[SUN].model = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
+	setUniformVec4(program, "sunPosition", glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+	setUniformVec4(program, "sunLightColor", glm::vec4(1.0f));
+	setUniformVec4(program, "planetAmbient", glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
+	setUniformVec4(program, "planetDiffuse", glm::vec4(1.1f));
+	setUniformVec4(program, "planetEmission", glm::vec4(0.0f));
 }
 
 /* Update the model matrix of each planet per frame accroding to the status of the earth.
