@@ -29,10 +29,12 @@ std::vector<int> indicesCount;//Number of indice of objs
 
 #include "planets.h"
 
-#define EARTH_REV_RADIUS 15.0f
-#define EARTH_RADIUS 1.0f
+#define EARTH_REV_RADIUS 10.0f
 #define EARTH_SCALE_SIZE 0.8f
-static float earthSelfRotNow = 0.0f;
+#define EARTH_ROT_DEG 0.8f
+#define EARTH_REV_DEG 0.8f
+static float planetRotDeg[NUM_OF_PLANETS];
+static float planetRevDeg[NUM_OF_PLANETS];
 
 /* Initialize the revolution radius, revolution period, rotate period, and radius ratio of
  * the planets to the earth, which you perfer to use in this program.
@@ -341,7 +343,7 @@ static void render()
 		glBindTexture(GL_TEXTURE_2D, objects[i].texture);
 
 		setUniformMat4(program, "model", objects[i].model);
-		setUniformFloat(program, "rotateDeg", earthSelfRotNow * planet_info[i].rotPeriod_ratio);
+		setUniformFloat(program, "rotateDeg", planetRotDeg[i]);
 		setUniformVec4(program, "planetEmission", objects[i].materialEmission);
 
 		glDrawElements(GL_TRIANGLES, indicesCount[i], GL_UNSIGNED_INT, nullptr);
@@ -367,19 +369,21 @@ void initalPlanets()
 	// All planets use the same amibent and diffuse color.
 	setUniformVec4(program, "planetAmbient", glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 	setUniformVec4(program, "planetDiffuse", glm::vec4(1.1f));
+
+	// Initialize the control variables
+	for (int i = 0; i < NUM_OF_PLANETS; ++i)
+		planetRevDeg[i] = planetRotDeg[i] = 0.0f;
 }
 
 /* Update the model matrix of each planet per frame accroding to the status of the earth.
- * Parameters:
- * - earth_revDeg2Rad: The current revolution degree of the earth in radius.
  */
-void updatePlanets(float earth_revDeg2Rad)
+void updatePlanets()
 {
 	float revRadius_planet, revRad_planet, size_planet;
 
 	for (int i = 1; i < NUM_OF_PLANETS; ++i) {
 		revRadius_planet = EARTH_REV_RADIUS * planet_info[i].revRadius_ratio;
-		revRad_planet = earth_revDeg2Rad * planet_info[i].revPeriod_ratio;
+		revRad_planet = glm::radians(planetRevDeg[i]);
 		size_planet = EARTH_SCALE_SIZE * planet_info[i].planetRadius_ratio;
 
 		objects[i].model = glm::scale(glm::translate(glm::mat4(1.0f),
@@ -442,19 +446,19 @@ int main(int argc, char *argv[])
 	initalPlanets();
 
 	float last, start;
-	float earthDegNow = 0.0f;
 	last = start = glfwGetTime();
 	int fps=0;
 	while (!glfwWindowShouldClose(window))
 	{//program will keep draw here until you close the window
 		float delta = glfwGetTime() - start;
 
-		earthDegNow += 1.0f;
-		if (earthDegNow > 359.9f) earthDegNow = 0.0f;
-		earthSelfRotNow += 1.0f;
-		if (earthSelfRotNow > 360.0f) earthSelfRotNow = 0.0f;
-		updatePlanets(glm::radians(earthDegNow));
-
+		for (int i = 0; i < NUM_OF_PLANETS; ++i) {
+			planetRevDeg[i] += EARTH_REV_DEG * planet_info[i].revPeriod_ratio;
+			if (planetRevDeg[i] > 360.0f ) planetRevDeg[i] -= 360.0f;
+			planetRotDeg[i] += EARTH_ROT_DEG * planet_info[i].rotPeriod_ratio;
+			if (planetRotDeg[i] > 360.0f ) planetRotDeg[i] -= 360.0f;
+		}
+		updatePlanets();
 		render();
 		glfwSwapBuffers(window);
 		glfwPollEvents();
