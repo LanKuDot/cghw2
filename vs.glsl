@@ -16,7 +16,7 @@ out vec4 worldNormal;
 void main()
 {
 	// Circular shift the texcoord
-	float new_x = texcoord.x + rotateDeg / 360.0f;
+	float new_x = texcoord.x - rotateDeg / 360.0f;
 	// No need to normalize the texcoord within [0,1] !?
 	fTexcoord = vec2(new_x, texcoord.y);
 
