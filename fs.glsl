@@ -5,6 +5,9 @@
 layout(location=0) out vec4 color;
 
 in vec2 fTexcoord;
+in vec4 worldPosition;
+in vec4 worldNormal;
+
 uniform sampler2D uSampler;
 
 void main()
