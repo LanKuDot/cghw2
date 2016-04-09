@@ -5,6 +5,7 @@ enum Planets {
 	SUN = 0,
 	EARTH,
 	MARS,
+	VENUS,
 	NUM_OF_PLANETS
 };
 

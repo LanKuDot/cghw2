@@ -42,7 +42,8 @@ static PlanetInfo planet_info[NUM_OF_PLANETS] = {
 // { revRadius, revPeriod, rotPeriod, radius } ratio to the earth
 	{ 0.0f, 0.0f, 0.0f, 100.0f },    // SUN, the value is not used here.
 	{ 1.0f, 1.0f, 1.0f, 1.0f },      // EARTH
-	{ 0.8f, 2.0f, 1.0f, 0.5f }       // MARS
+	{ 1.2f, 2.0f, 1.0f, 0.5f },      // MARS
+	{ 0.8f, 4.0f, 2.0f, 0.8f }       // VENUS
 };
 
 static void error_callback(int error, const char* description)
@@ -357,6 +358,7 @@ void initalPlanets()
 	add_obj(program, "sun.obj", "sun.bmp", glm::vec4(0.9f));
 	add_obj(program, "earth.obj", "earth.bmp", glm::vec4(0.0f));
 	add_obj(program, "earth.obj", "mars.bmp", glm::vec4(0.0f));
+	add_obj(program, "earth.obj", "venus.bmp", glm::vec4(0.0f));
 
 	// Initialize the model matrix, the position, and the light color of the SUN.
 	objects[SUN].model = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
