@@ -49,8 +49,8 @@ static PlanetInfo planet_info[NUM_OF_PLANETS] = {
 	{  1.523f, 0.8f, 1.2f,  0.531f },      // MARS
 	{  5.221f, 0.6f, 2.0f, 10.958f },      // JUPITER
 	{  6.281f, 0.4f, 1.8f,  9.138f },      // SATURN
-	{ 19.261f, 0.2f, 1.4f,  3.981f },      // URUANS
-	{ 30.187f, 0.1f, 1.6f,  3.864f },      // NEPTUNE
+	{  7.261f, 0.2f, 1.4f,  3.981f },      // URUANS
+	{  8.187f, 0.1f, 1.6f,  3.864f },      // NEPTUNE
 };
 
 static void error_callback(int error, const char* description)
