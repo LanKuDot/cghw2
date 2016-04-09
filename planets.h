@@ -3,9 +3,14 @@
 
 enum Planets {
 	SUN = 0,
+	MERCURY,
+	VENUS,
 	EARTH,
 	MARS,
-	VENUS,
+	JUPITER,
+	SATURN,
+	URUANS,
+	NEPTUNE,
 	NUM_OF_PLANETS
 };
 

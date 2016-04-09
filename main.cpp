@@ -42,10 +42,15 @@ static float planetRevDeg[NUM_OF_PLANETS];
  */
 static PlanetInfo planet_info[NUM_OF_PLANETS] = {
 // { revRadius, revPeriod, rotPeriod, radius } ratio to the earth
-	{ 0.0f, 0.0f, 0.0f, 100.0f },    // SUN, the value is not used here.
-	{ 1.0f, 1.0f, 1.0f, 1.0f },      // EARTH
-	{ 1.2f, 2.0f, 1.0f, 0.5f },      // MARS
-	{ 0.8f, 4.0f, 2.0f, 0.8f }       // VENUS
+	{ 0.0f, 0.0f, 0.5f, 100.0f },    // SUN, the value is not used here.
+	{  0.383f, 1.4f, 0.8f,  0.378f },      // VERCURY
+	{  0.724f, 1.2f, 0.6f,  0.958f },      // VENUS
+	{  1.000f, 1.0f, 1.0f,  1.000f },      // EARTH
+	{  1.523f, 0.8f, 1.2f,  0.531f },      // MARS
+	{  5.221f, 0.6f, 2.0f, 10.958f },      // JUPITER
+	{  6.281f, 0.4f, 1.8f,  9.138f },      // SATURN
+	{ 19.261f, 0.2f, 1.4f,  3.981f },      // URUANS
+	{ 30.187f, 0.1f, 1.6f,  3.864f },      // NEPTUNE
 };
 
 static void error_callback(int error, const char* description)
@@ -358,9 +363,14 @@ void initalPlanets()
 {
 	// Add planets to the rendering list
 	add_obj(program, "sun.obj", "sun.bmp", glm::vec4(0.9f));
+	add_obj(program, "earth.obj", "mercury.bmp", glm::vec4(0.0f));
+	add_obj(program, "earth.obj", "venus.bmp", glm::vec4(0.0f));
 	add_obj(program, "earth.obj", "earth.bmp", glm::vec4(0.0f));
 	add_obj(program, "earth.obj", "mars.bmp", glm::vec4(0.0f));
-	add_obj(program, "earth.obj", "venus.bmp", glm::vec4(0.0f));
+	add_obj(program, "earth.obj", "jupiter.bmp", glm::vec4(0.0f));
+	add_obj(program, "earth.obj", "saturn.bmp", glm::vec4(0.0f));
+	add_obj(program, "earth.obj", "uruans.bmp", glm::vec4(0.0f));
+	add_obj(program, "earth.obj", "neptune.bmp", glm::vec4(0.0f));
 
 	// Initialize the model matrix, the position, and the light color of the SUN.
 	objects[SUN].model = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
