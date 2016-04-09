@@ -314,6 +314,19 @@ static void setUniformFloat(unsigned int program, const std::string &name, const
 	glUniform1f(loc, f);
 }
 
+/* The same as setUniformMat4 but set a vec4 value.
+ * Parameter:
+ * - vec: The new vec4 value
+ */
+static void setUniformVec4(unsigned int program, const std::string &name, const glm::vec4 &vec)
+{
+	glUseProgram(program);
+	GLint loc = glGetUniformLocation(program, name.c_str());
+	if (loc == -1) return;
+
+	glUniform4fv(loc, 1, glm::value_ptr(vec));
+}
+
 static void render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
