@@ -434,8 +434,8 @@ int main(int argc, char *argv[])
 	glfwSetKeyCallback(window, key_callback);
 
 	// load shader program
-	program = setup_shader(readfile("vs.glsl").c_str(), readfile("fs.glsl").c_str());
-	program2 = setup_shader(readfile("vs.glsl").c_str(), readfile("fs.glsl").c_str());
+	program = setup_shader(readfile("shader/vs.glsl").c_str(), readfile("shader/fs.glsl").c_str());
+	program2 = setup_shader(readfile("shader/vs.glsl").c_str(), readfile("shader/fs.glsl").c_str());
 
 	glEnable(GL_DEPTH_TEST);
 	glCullFace(GL_BACK);
