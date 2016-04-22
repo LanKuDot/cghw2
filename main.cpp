@@ -362,15 +362,15 @@ static void render()
 void initalPlanets()
 {
 	// Add planets to the rendering list
-	add_obj(program, "sun.obj", "sun.bmp", glm::vec4(0.9f));
-	add_obj(program, "earth.obj", "mercury.bmp", glm::vec4(0.0f));
-	add_obj(program, "earth.obj", "venus.bmp", glm::vec4(0.0f));
-	add_obj(program, "earth.obj", "earth.bmp", glm::vec4(0.0f));
-	add_obj(program, "earth.obj", "mars.bmp", glm::vec4(0.0f));
-	add_obj(program, "earth.obj", "jupiter.bmp", glm::vec4(0.0f));
-	add_obj(program, "earth.obj", "saturn.bmp", glm::vec4(0.0f));
-	add_obj(program, "earth.obj", "uruans.bmp", glm::vec4(0.0f));
-	add_obj(program, "earth.obj", "neptune.bmp", glm::vec4(0.0f));
+	add_obj(program, "sun.obj", "texture/sun.bmp", glm::vec4(0.9f));
+	add_obj(program, "earth.obj", "texture/mercury.bmp", glm::vec4(0.0f));
+	add_obj(program, "earth.obj", "texture/venus.bmp", glm::vec4(0.0f));
+	add_obj(program, "earth.obj", "texture/earth.bmp", glm::vec4(0.0f));
+	add_obj(program, "earth.obj", "texture/mars.bmp", glm::vec4(0.0f));
+	add_obj(program, "earth.obj", "texture/jupiter.bmp", glm::vec4(0.0f));
+	add_obj(program, "earth.obj", "texture/saturn.bmp", glm::vec4(0.0f));
+	add_obj(program, "earth.obj", "texture/uruans.bmp", glm::vec4(0.0f));
+	add_obj(program, "earth.obj", "texture/neptune.bmp", glm::vec4(0.0f));
 
 	// Initialize the model matrix, the position, and the light color of the SUN.
 	objects[SUN].model = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
