@@ -308,6 +308,22 @@ static void setUniformVec4(unsigned int program, const std::string &name, const 
 
 	glUniform4fv(loc, 1, glm::value_ptr(vec));
 }
+static void setUniformVec4A(unsigned int program, const std::string &name, const int count, const glm::vec4 *vec_array)
+{
+	glUseProgram(program);
+	GLint loc = glGetUniformLocation(program, name.c_str());
+	if (loc == -1) return;
+
+	// Convert the vec4 array to GLfloat array
+	GLfloat float_array[count * 4];
+	for (int i = 0; i < count; ++i) {
+		float_array[i*4] = vec_array[i].x;
+		float_array[i*4 + 1] = vec_array[i].y;
+		float_array[i*4 + 2] = vec_array[i].z;
+		float_array[i*4 + 3] = vec_array[i].w;
+	}
+	glUniform4fv(loc, count, float_array);
+}
 
 static void render()
 {
