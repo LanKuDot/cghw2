@@ -331,11 +331,23 @@ void initalPlanets()
 {
 	// Add planets to the rendering list
 	add_obj(program, "sun.obj", "texture/sun.bmp");
-	add_obj(program, "earth.obj", "texture/earth.bmp");
+	add_obj(program, "earth.obj", "texture/earth.bmp");	// For flat shading
+	add_obj(program, "earth.obj", "texture/earth.bmp");	// For gouraud shading
+	add_obj(program, "earth.obj", "texture/earth.bmp");	// For phong shading
+	add_obj(program, "earth.obj", "texture/earth.bmp");	// For blinn-phong shading
+
+	// Initialize the position of 4 planets
+	objects[1].model = glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(-7.5f, 0.0f, 0.0f)),
+			glm::vec3(1.7f));
+	objects[2].model = glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(-2.5f, 0.0f, 0.0f)),
+			glm::vec3(1.7f));
+	objects[3].model = glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(2.5f, 0.0f, 0.0f)),
+			glm::vec3(1.7f));
+	objects[4].model = glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(7.5f, 0.0f, 0.0f)),
+			glm::vec3(1.7f));
 
 	// Initialize the model matrix, the position, and the light color of the SUN.
 	objects[0].model = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
-	objects[1].model = glm::translate(glm::mat4(1.0f), glm::vec3(15.0f, 0.0f, 0.0f));
 	setUniformVec4(program, "sunPosition", glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 	setUniformVec4(program, "sunLightColor", glm::vec4(1.0f));
 	// All planets use the same amibent and diffuse color.
@@ -393,10 +405,11 @@ int main(int argc, char *argv[])
 
 	// Matrix for transform pipeline of 'program': M_pers * M_camera * M_model
 	// - Model translation: orignal, no scale, no rotation.
-	// - Camera: eye @ ( 30, 30, 30 ), look @ ( 0, 0, 0 ), Vup = ( 0, 1, 0 ).
+	// - Camera: eye @ ( 0, 0, 20 ), look @ ( 0, 0, 0 ), Vup = ( 0, 1, 0 ).
 	// - Perspective volume: fovy = 45 deg, aspect( x = 640, y = 480 ), zNear = 1, zFar = 200.
 	setUniformMat4(program, "vp", glm::perspective(glm::radians(45.0f), 640.0f/480, 1.0f, 200.f)*
-			glm::lookAt(glm::vec3(30.0f), glm::vec3(), glm::vec3(0, 1, 0))*glm::mat4(1.0f));
+			glm::lookAt(glm::vec3(0.0f, 0.0f, 20.0f), glm::vec3(), glm::vec3(0, 1, 0))*
+			glm::mat4(1.0f));
 	// camera for 'program2': orthogonal volume
 	setUniformMat4(program2, "vp", glm::mat4(1.0));
 
