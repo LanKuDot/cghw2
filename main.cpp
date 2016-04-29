@@ -23,7 +23,7 @@ struct object_struct{
 };
 
 std::vector<object_struct> objects;//vertex array object,vertex buffer object and texture(color) for objs
-unsigned int program, program2;
+unsigned int program, program_flat;
 std::vector<int> indicesCount;//Number of indice of objs
 
 static void error_callback(int error, const char* description)
@@ -347,7 +347,7 @@ void initalPlanets()
 {
 	// Add planets to the rendering list
 	add_obj(program, "sun.obj", "texture/sun.bmp");
-	add_obj(program, "earth.obj", "texture/earth.bmp");	// For flat shading
+	add_obj(program_flat, "earth.obj", "texture/saturn.bmp");	// For flat shading
 	add_obj(program, "earth.obj", "texture/earth.bmp");	// For gouraud shading
 	add_obj(program, "earth.obj", "texture/earth.bmp");	// For phong shading
 	add_obj(program, "earth.obj", "texture/earth.bmp");	// For blinn-phong shading
@@ -364,12 +364,44 @@ void initalPlanets()
 
 	// Initialize the model matrix, the position, and the light color of the SUN.
 	objects[0].model = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
+}
+
+/* @brief Load and initialize the shader programs.
+ */
+void initialShader()
+{
+	glm::vec4 k[3] = {
+		glm::vec4(0.1f, 0.1f, 0.1f, 0.0f),	// Ambient
+		glm::vec4(0.8f, 0.8f, 0.8f, 0.0f),	// Diffuse
+		glm::vec4(0.8f, 0.8f, 0.8f, 0.0f)	// Specular
+	};
+	glm::vec4 light[3] = {
+		glm::vec4(1.0f, 1.0f, 1.0f, 0.0f),	// Ambient
+		glm::vec4(1.0f, 1.0f, 1.0f, 0.0f),	// Diffuse
+		glm::vec4(1.0f, 1.0f, 1.0f, 0.0f)	// Specular
+	};
+	// Matrix of MVP: M_pers * M_camera * M_model
+	// - Model translation: orignal, no scale, no rotation.
+	// - Camera: eye @ ( 0, 0, 20 ), look @ ( 0, 0, 0 ), Vup = ( 0, 1, 0 ).
+	// - Perspective volume: fovy = 45 deg, aspect( x = 640, y = 480 ), zNear = 1, zFar = 200.
+	glm::mat4 vp = glm::perspective(glm::radians(45.0f), 640.0f/480, 1.0f, 200.f)*
+			glm::lookAt(glm::vec3(0.0f, 0.0f, 20.0f), glm::vec3(), glm::vec3(0, 1, 0))*
+			glm::mat4(1.0f);
+
+	program = setup_shader(readfile("shader/vs.glsl").c_str(), readfile("shader/fs.glsl").c_str());
+	setUniformMat4(program, "vp", vp);
 	setUniformVec4(program, "sunPosition", glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 	setUniformVec4(program, "sunLightColor", glm::vec4(1.0f));
 	// All planets use the same amibent and diffuse color.
 	setUniformVec4(program, "planetAmbient", glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 	setUniformVec4(program, "planetDiffuse", glm::vec4(1.1f));
 	setUniformVec4(program, "planetEmission", glm::vec4(0.9f));
+
+	// Flat shading program
+	program_flat = setup_shader(readfile("shader/vs_flat.glsl").c_str(), readfile("shader/fs_flat.glsl").c_str());
+	setUniformVec4A(program_flat, "k", 3, k);
+	setUniformVec4A(program_flat, "light", 3, light);
+	setUniformMat4(program_flat, "vp", vp);
 }
 
 /* Update the model matrix of each planet per frame accroding to the status of the earth.
@@ -409,22 +441,14 @@ int main(int argc, char *argv[])
 	// Setup input callback
 	glfwSetKeyCallback(window, key_callback);
 
-	// load shader program
-	program = setup_shader(readfile("shader/vs.glsl").c_str(), readfile("shader/fs.glsl").c_str());
-
 	glEnable(GL_DEPTH_TEST);
 	glCullFace(GL_BACK);
 	// Enable blend mode for billboard
 	//glEnable(GL_BLEND);
 	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	// Matrix for transform pipeline of 'program': M_pers * M_camera * M_model
-	// - Model translation: orignal, no scale, no rotation.
-	// - Camera: eye @ ( 0, 0, 20 ), look @ ( 0, 0, 0 ), Vup = ( 0, 1, 0 ).
-	// - Perspective volume: fovy = 45 deg, aspect( x = 640, y = 480 ), zNear = 1, zFar = 200.
-	setUniformMat4(program, "vp", glm::perspective(glm::radians(45.0f), 640.0f/480, 1.0f, 200.f)*
-			glm::lookAt(glm::vec3(0.0f, 0.0f, 20.0f), glm::vec3(), glm::vec3(0, 1, 0))*
-			glm::mat4(1.0f));
+	// load shader program
+	initialShader();
 
 	// Initialize the plantes
 	initalPlanets();
