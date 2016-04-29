@@ -18,7 +18,6 @@ struct object_struct{
 	unsigned int vao;
 	unsigned int vbo[4];
 	unsigned int texture;
-	glm::vec4 materialEmission;
 	glm::mat4 model;
 	object_struct(): model(glm::mat4(1.0f)){}
 };
@@ -200,15 +199,12 @@ static unsigned char *load_bmp(const char *bmp, unsigned int *width, unsigned in
  * - program: Which shader program this object should use
  * - filename: The object file of this object
  * - texbmp: The texture file for this object
- * - emission: The emission material color of this object
  * Return:
  * - The index of this obejct in the rendering list.
  */
-static int add_obj(unsigned int program, const char *filename, const char *texbmp,
-		glm::vec4 emission)
+static int add_obj(unsigned int program, const char *filename, const char *texbmp)
 {
 	object_struct new_node;
-	new_node.materialEmission = emission;
 
 	std::vector<tinyobj::shape_t> shapes;
 	std::vector<tinyobj::material_t> materials;
@@ -349,7 +345,6 @@ static void render()
 
 		setUniformMat4(program, "model", objects[i].model);
 		setUniformFloat(program, "rotateDeg", planetRotDeg[i]);
-		setUniformVec4(program, "planetEmission", objects[i].materialEmission);
 
 		glDrawElements(GL_TRIANGLES, indicesCount[i], GL_UNSIGNED_INT, nullptr);
 	}
@@ -362,15 +357,15 @@ static void render()
 void initalPlanets()
 {
 	// Add planets to the rendering list
-	add_obj(program, "sun.obj", "texture/sun.bmp", glm::vec4(0.9f));
-	add_obj(program, "earth.obj", "texture/mercury.bmp", glm::vec4(0.0f));
-	add_obj(program, "earth.obj", "texture/venus.bmp", glm::vec4(0.0f));
-	add_obj(program, "earth.obj", "texture/earth.bmp", glm::vec4(0.0f));
-	add_obj(program, "earth.obj", "texture/mars.bmp", glm::vec4(0.0f));
-	add_obj(program, "earth.obj", "texture/jupiter.bmp", glm::vec4(0.0f));
-	add_obj(program, "earth.obj", "texture/saturn.bmp", glm::vec4(0.0f));
-	add_obj(program, "earth.obj", "texture/uruans.bmp", glm::vec4(0.0f));
-	add_obj(program, "earth.obj", "texture/neptune.bmp", glm::vec4(0.0f));
+	add_obj(program, "sun.obj", "texture/sun.bmp");
+	add_obj(program, "earth.obj", "texture/mercury.bmp");
+	add_obj(program, "earth.obj", "texture/venus.bmp");
+	add_obj(program, "earth.obj", "texture/earth.bmp");
+	add_obj(program, "earth.obj", "texture/mars.bmp");
+	add_obj(program, "earth.obj", "texture/jupiter.bmp");
+	add_obj(program, "earth.obj", "texture/saturn.bmp");
+	add_obj(program, "earth.obj", "texture/uruans.bmp");
+	add_obj(program, "earth.obj", "texture/neptune.bmp");
 
 	// Initialize the model matrix, the position, and the light color of the SUN.
 	objects[SUN].model = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
