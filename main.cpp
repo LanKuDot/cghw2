@@ -333,7 +333,7 @@ static void render()
 		glBindVertexArray(objects[i].vao);
 		glBindTexture(GL_TEXTURE_2D, objects[i].texture);
 
-		setUniformMat4(program, "model", objects[i].model);
+		setUniformMat4(objects[i].program, "model", objects[i].model);
 
 		glDrawElements(GL_TRIANGLES, indicesCount[i], GL_UNSIGNED_INT, nullptr);
 	}
