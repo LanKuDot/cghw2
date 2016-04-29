@@ -395,7 +395,6 @@ int main(int argc, char *argv[])
 
 	// load shader program
 	program = setup_shader(readfile("shader/vs.glsl").c_str(), readfile("shader/fs.glsl").c_str());
-	program2 = setup_shader(readfile("shader/vs.glsl").c_str(), readfile("shader/fs.glsl").c_str());
 
 	glEnable(GL_DEPTH_TEST);
 	glCullFace(GL_BACK);
@@ -410,8 +409,6 @@ int main(int argc, char *argv[])
 	setUniformMat4(program, "vp", glm::perspective(glm::radians(45.0f), 640.0f/480, 1.0f, 200.f)*
 			glm::lookAt(glm::vec3(0.0f, 0.0f, 20.0f), glm::vec3(), glm::vec3(0, 1, 0))*
 			glm::mat4(1.0f));
-	// camera for 'program2': orthogonal volume
-	setUniformMat4(program2, "vp", glm::mat4(1.0));
 
 	// Initialize the plantes
 	initalPlanets();
