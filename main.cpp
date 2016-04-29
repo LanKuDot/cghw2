@@ -26,32 +26,6 @@ std::vector<object_struct> objects;//vertex array object,vertex buffer object an
 unsigned int program, program2;
 std::vector<int> indicesCount;//Number of indice of objs
 
-#include "planets.h"
-
-#define EARTH_REV_RADIUS 10.0f
-#define EARTH_SCALE_SIZE 0.8f
-#define EARTH_ROT_DEG 0.8f
-#define EARTH_REV_DEG 0.8f
-static float planetRotDeg[NUM_OF_PLANETS];
-static float planetRevDeg[NUM_OF_PLANETS];
-
-/* Initialize the revolution radius, revolution period, rotate period, and radius ratio of
- * the planets to the earth, which you perfer to use in this program.
- * Therefore, the values set here are not equal to the real ratio in the solar system!
- */
-static PlanetInfo planet_info[NUM_OF_PLANETS] = {
-// { revRadius, revPeriod, rotPeriod, radius } ratio to the earth
-	{ 0.0f, 0.0f, 0.5f, 100.0f },    // SUN, the value is not used here.
-	{  0.383f, 1.4f, 0.8f,  0.378f },      // VERCURY
-	{  0.724f, 1.2f, 0.6f,  0.958f },      // VENUS
-	{  1.000f, 1.0f, 1.0f,  1.000f },      // EARTH
-	{  1.523f, 0.8f, 1.2f,  0.531f },      // MARS
-	{  5.221f, 0.6f, 2.0f, 10.958f },      // JUPITER
-	{  6.281f, 0.4f, 1.8f,  9.138f },      // SATURN
-	{  7.261f, 0.2f, 1.4f,  3.981f },      // URUANS
-	{  8.187f, 0.1f, 1.6f,  3.864f },      // NEPTUNE
-};
-
 static void error_callback(int error, const char* description)
 {
 	fputs(description, stderr);
@@ -344,7 +318,6 @@ static void render()
 		glBindTexture(GL_TEXTURE_2D, objects[i].texture);
 
 		setUniformMat4(program, "model", objects[i].model);
-		setUniformFloat(program, "rotateDeg", planetRotDeg[i]);
 
 		glDrawElements(GL_TRIANGLES, indicesCount[i], GL_UNSIGNED_INT, nullptr);
 	}
@@ -358,43 +331,23 @@ void initalPlanets()
 {
 	// Add planets to the rendering list
 	add_obj(program, "sun.obj", "texture/sun.bmp");
-	add_obj(program, "earth.obj", "texture/mercury.bmp");
-	add_obj(program, "earth.obj", "texture/venus.bmp");
 	add_obj(program, "earth.obj", "texture/earth.bmp");
-	add_obj(program, "earth.obj", "texture/mars.bmp");
-	add_obj(program, "earth.obj", "texture/jupiter.bmp");
-	add_obj(program, "earth.obj", "texture/saturn.bmp");
-	add_obj(program, "earth.obj", "texture/uruans.bmp");
-	add_obj(program, "earth.obj", "texture/neptune.bmp");
 
 	// Initialize the model matrix, the position, and the light color of the SUN.
-	objects[SUN].model = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
+	objects[0].model = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
+	objects[1].model = glm::translate(glm::mat4(1.0f), glm::vec3(15.0f, 0.0f, 0.0f));
 	setUniformVec4(program, "sunPosition", glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 	setUniformVec4(program, "sunLightColor", glm::vec4(1.0f));
 	// All planets use the same amibent and diffuse color.
 	setUniformVec4(program, "planetAmbient", glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 	setUniformVec4(program, "planetDiffuse", glm::vec4(1.1f));
-
-	// Initialize the control variables
-	for (int i = 0; i < NUM_OF_PLANETS; ++i)
-		planetRevDeg[i] = planetRotDeg[i] = 0.0f;
+	setUniformVec4(program, "planetEmission", glm::vec4(0.9f));
 }
 
 /* Update the model matrix of each planet per frame accroding to the status of the earth.
  */
 void updatePlanets()
 {
-	float revRadius_planet, revRad_planet, size_planet;
-
-	for (int i = 1; i < NUM_OF_PLANETS; ++i) {
-		revRadius_planet = EARTH_REV_RADIUS * planet_info[i].revRadius_ratio;
-		revRad_planet = glm::radians(planetRevDeg[i]);
-		size_planet = EARTH_SCALE_SIZE * planet_info[i].planetRadius_ratio;
-
-		objects[i].model = glm::scale(glm::translate(glm::mat4(1.0f),
-				glm::rotateY(glm::vec3(revRadius_planet, 0.0f, 0.0f), revRad_planet)),
-			glm::vec3(size_planet));
-	}
 }
 
 int main(int argc, char *argv[])
@@ -457,13 +410,6 @@ int main(int argc, char *argv[])
 	{//program will keep draw here until you close the window
 		float delta = glfwGetTime() - start;
 
-		for (int i = 0; i < NUM_OF_PLANETS; ++i) {
-			planetRevDeg[i] += EARTH_REV_DEG * planet_info[i].revPeriod_ratio;
-			if (planetRevDeg[i] > 360.0f ) planetRevDeg[i] -= 360.0f;
-			planetRotDeg[i] += EARTH_ROT_DEG * planet_info[i].rotPeriod_ratio;
-			if (planetRotDeg[i] > 360.0f ) planetRotDeg[i] -= 360.0f;
-		}
-		updatePlanets();
 		render();
 		glfwSwapBuffers(window);
 		glfwPollEvents();
