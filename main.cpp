@@ -406,9 +406,12 @@ void initialShader()
 
 	// Flat shading program
 	program_flat = setup_shader(readfile("shader/vs_flat.glsl").c_str(), readfile("shader/fs_flat.glsl").c_str());
+	setUniformVec4(program_flat, "lightPosition", glm::vec4(10.0f, 10.0f, 10.0f, 0.0f));
+	setUniformVec4(program_flat, "viewPosition", glm::vec4(0.0f, 0.0f, 20.0f, 0.0f));
 	setUniformVec4A(program_flat, "k", 3, k);
 	setUniformVec4A(program_flat, "light", 3, light);
 	setUniformMat4(program_flat, "vp", vp);
+	setUniformFloat(program_flat, "shininess", 10.0f);
 }
 
 /* Update the model matrix of each planet per frame accroding to the status of the earth.
