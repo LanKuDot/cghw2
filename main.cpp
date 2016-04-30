@@ -32,6 +32,8 @@ std::vector<int> indicesCount;//Number of indice of objs
 #define BLINN_PHONG 3
 #define NUM_OF_SHADER 4
 unsigned int program, programs[NUM_OF_SHADER];
+/* The index of the object which using flat shader in the rendering list. */
+static int flatObject_ID;
 
 static void error_callback(int error, const char* description)
 {
@@ -351,7 +353,7 @@ static void render()
 		setUniformMat4(objects[i].program, "model", objects[i].model);
 
 		// The flat shader
-		if (i == 1) {
+		if (i == flatObject_ID) {
 			glShadeModel(GL_FLAT);
 			glProvokingVertex(GL_FIRST_VERTEX_CONVENTION);
 		} else
