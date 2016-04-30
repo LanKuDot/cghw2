@@ -405,7 +405,7 @@ void initialShader()
 		glm::vec4(1.0f, 1.0f, 1.0f, 0.0f),	// Diffuse
 		glm::vec4(1.0f, 1.0f, 1.0f, 0.0f)	// Specular
 	};
-	float d_factor[3] = {1.0f, 0.01f, 0.01f};	// a, b, c of a + b*D + c*D^2
+	float d_factor[3] = {1.0f, 0.01f, 0.001f};	// a, b, c of a + b*D + c*D^2
 
 	// Matrix of MVP: M_pers * M_camera * M_model
 	// - Model translation: orignal, no scale, no rotation.
