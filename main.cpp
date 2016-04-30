@@ -385,6 +385,7 @@ void initalPlanets()
  */
 void initialShader()
 {
+	glm::vec3 viewPosition = glm::vec3(0.0f, 0.0f, 20.0f);
 	glm::vec4 k[3] = {
 		glm::vec4(0.1f, 0.1f, 0.1f, 0.0f),	// Ambient
 		glm::vec4(0.8f, 0.8f, 0.8f, 0.0f),	// Diffuse
@@ -395,14 +396,14 @@ void initialShader()
 		glm::vec4(1.0f, 1.0f, 1.0f, 0.0f),	// Diffuse
 		glm::vec4(1.0f, 1.0f, 1.0f, 0.0f)	// Specular
 	};
-	float d_factor[3] = {1.0f, 0.01f, 0.01f};
+	float d_factor[3] = {1.0f, 0.01f, 0.01f};	// a, b, c of a + b*D + c*D^2
 
 	// Matrix of MVP: M_pers * M_camera * M_model
 	// - Model translation: orignal, no scale, no rotation.
 	// - Camera: eye @ ( 0, 0, 20 ), look @ ( 0, 0, 0 ), Vup = ( 0, 1, 0 ).
 	// - Perspective volume: fovy = 45 deg, aspect( x = 640, y = 480 ), zNear = 1, zFar = 200.
 	glm::mat4 vp = glm::perspective(glm::radians(45.0f), 640.0f/480, 1.0f, 200.f)*
-			glm::lookAt(glm::vec3(0.0f, 0.0f, 20.0f), glm::vec3(), glm::vec3(0, 1, 0))*
+			glm::lookAt(viewPosition, glm::vec3(), glm::vec3(0, 1, 0))*
 			glm::mat4(1.0f);
 
 	program = setup_shader(readfile("shader/vs.glsl").c_str(), readfile("shader/fs.glsl").c_str());
@@ -417,7 +418,7 @@ void initialShader()
 	// Flat shading program
 	program_flat = setup_shader(readfile("shader/vs_flat.glsl").c_str(), readfile("shader/fs_flat.glsl").c_str());
 	setUniformVec4(program_flat, "lightPosition", glm::vec4(10.0f, 10.0f, 10.0f, 0.0f));
-	setUniformVec4(program_flat, "viewPosition", glm::vec4(0.0f, 0.0f, 20.0f, 0.0f));
+	setUniformVec4(program_flat, "viewPosition", glm::vec4(viewPosition, 0.0f));
 	setUniformVec4A(program_flat, "k", 3, k);
 	setUniformVec4A(program_flat, "light", 3, light);
 	setUniformMat4(program_flat, "vp", vp);
