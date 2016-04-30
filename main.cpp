@@ -335,6 +335,13 @@ static void render()
 
 		setUniformMat4(objects[i].program, "model", objects[i].model);
 
+		// The flat shader
+		if (i == 1) {
+			glShadeModel(GL_FLAT);
+			glProvokingVertex(GL_FIRST_VERTEX_CONVENTION);
+		} else
+			glShadeModel(GL_SMOOTH);
+
 		glDrawElements(GL_TRIANGLES, indicesCount[i], GL_UNSIGNED_INT, nullptr);
 	}
 	glBindVertexArray(0);
