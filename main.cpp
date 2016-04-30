@@ -34,6 +34,7 @@ std::vector<int> indicesCount;//Number of indice of objs
 unsigned int program, programs[NUM_OF_SHADER];
 /* The index of the object which using flat shader in the rendering list. */
 static int flatObject_ID;
+static glm::vec3 sunPosition = glm::vec3(0.0f, 10.0f, 15.0f);
 
 static void error_callback(int error, const char* description)
 {
@@ -385,9 +386,6 @@ void initalPlanets()
 			glm::vec3(2.0f));
 	objects[4].model = glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(7.5f, 0.0f, 0.0f)),
 			glm::vec3(2.0f));
-
-	// Initialize the model matrix, the position, and the light color of the SUN.
-	objects[0].model = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
 }
 
 /* @brief Load and initialize the shader programs.
@@ -427,7 +425,6 @@ void initialShader()
 	for(int i = 0; i < NUM_OF_SHADER; ++i) {
 		setUniformMat4(programs[i], "vp", vp);
 		setUniformVec4(programs[i], "viewPosition", glm::vec4(viewPosition, 0.0f));
-		setUniformVec4(programs[i], "lightPosition", glm::vec4(0.0f, 10.0f, 10.0f, 0.0f));
 		setUniformVec4A(programs[i], "light", 3, light);
 		setUniformVec4A(programs[i], "k", 3, k);
 		setUniformFloat(programs[i], "shininess", 10.0f);
@@ -435,10 +432,18 @@ void initialShader()
 	}
 }
 
-/* Update the model matrix of each planet per frame accroding to the status of the earth.
+/* Update the light position of each shader accroding to the position of the sun.
+ * The sun rotates around y=0.
  */
-void updatePlanets()
+void updateLightPosition(float radian)
 {
+	glm::vec3 rotatePosition = glm::rotateY(sunPosition, radian);
+
+	objects[0].model = glm::scale(glm::translate(glm::mat4(1.0f), rotatePosition),
+			glm::vec3(0.5f));
+
+	for(int i = 0; i < NUM_OF_SHADER; ++i)
+		setUniformVec4(programs[i], "lightPosition", glm::vec4(rotatePosition, 0.0f));
 }
 
 int main(int argc, char *argv[])
@@ -484,12 +489,16 @@ int main(int argc, char *argv[])
 	// Initialize the plantes
 	initalPlanets();
 
-	float last, start;
+	float last, start, sunRotateDeg = 0.0f;
 	last = start = glfwGetTime();
 	int fps=0;
 	while (!glfwWindowShouldClose(window))
 	{//program will keep draw here until you close the window
 		float delta = glfwGetTime() - start;
+
+		sunRotateDeg += 1.0f;
+		if (sunRotateDeg > 359.5f) sunRotateDeg = 0.0f;
+		updateLightPosition(glm::radians(sunRotateDeg));
 
 		render();
 		glfwSwapBuffers(window);
