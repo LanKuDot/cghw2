@@ -371,8 +371,8 @@ void initalPlanets()
 {
 	// Add planets to the rendering list
 	add_obj(program, "sun.obj", "texture/sun.bmp");
-	add_obj(programs[FLAT], "earth.obj", "texture/saturn.bmp");	// For flat shading
-	add_obj(program, "earth.obj", "texture/earth.bmp");	// For gouraud shading
+	flatObject_ID = add_obj(programs[FLAT], "earth.obj", "texture/saturn.bmp");
+	add_obj(programs[GOURAUD], "earth.obj", "texture/saturn.bmp");
 	add_obj(program, "earth.obj", "texture/earth.bmp");	// For phong shading
 	add_obj(program, "earth.obj", "texture/earth.bmp");	// For blinn-phong shading
 
@@ -425,12 +425,13 @@ void initialShader()
 	setUniformVec4(program, "planetEmission", glm::vec4(0.9f));
 
 	programs[FLAT] = setup_shader(readfile("shader/vs_flat.glsl").c_str(), readfile("shader/fs_flat.glsl").c_str());
+	programs[GOURAUD] = setup_shader(readfile("shader/vs_gouraud.glsl").c_str(), readfile("shader/fs_gouraud.glsl").c_str());
 
 	// Initialize the uniform variables
-	for(int i = 0; i < 1; ++i) {
+	for(int i = 0; i < 2; ++i) {
 		setUniformMat4(programs[i], "vp", vp);
 		setUniformVec4(programs[i], "viewPosition", glm::vec4(viewPosition, 0.0f));
-		setUniformVec4(programs[i], "lightPosition", glm::vec4(10.0f, 10.0f, 10.0f, 0.0f));
+		setUniformVec4(programs[i], "lightPosition", glm::vec4(0.0f, 10.0f, 10.0f, 0.0f));
 		setUniformVec4A(programs[i], "light", 3, light);
 		setUniformVec4A(programs[i], "k", 3, k);
 		setUniformFloat(programs[i], "shininess", 10.0f);
