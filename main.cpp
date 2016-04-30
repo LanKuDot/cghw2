@@ -35,6 +35,8 @@ unsigned int program, programs[NUM_OF_SHADER];
 /* The index of the object which using flat shader in the rendering list. */
 static int flatObject_ID;
 static glm::vec3 sunPosition = glm::vec3(0.0f, 10.0f, 15.0f);
+/* Toggle the value by pressing P key. If it's ture, the light will keep rotating. */
+static bool keepRotate = true;
 
 static void error_callback(int error, const char* description)
 {
@@ -44,6 +46,8 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 {
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GL_TRUE);
+	else if (key == GLFW_KEY_P && action == GLFW_PRESS)
+		keepRotate = !keepRotate;
 }
 
 /* Load and compile the vertex shader and fragment shader, and link them to a program object.
@@ -496,7 +500,7 @@ int main(int argc, char *argv[])
 	{//program will keep draw here until you close the window
 		float delta = glfwGetTime() - start;
 
-		sunRotateDeg += 1.0f;
+		if (keepRotate) sunRotateDeg += 1.0f;
 		if (sunRotateDeg > 359.5f) sunRotateDeg = 0.0f;
 		updateLightPosition(glm::radians(sunRotateDeg));
 
