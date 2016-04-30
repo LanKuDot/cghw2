@@ -417,12 +417,6 @@ void initialShader()
 
 	program = setup_shader(readfile("shader/vs.glsl").c_str(), readfile("shader/fs.glsl").c_str());
 	setUniformMat4(program, "vp", vp);
-	setUniformVec4(program, "sunPosition", glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
-	setUniformVec4(program, "sunLightColor", glm::vec4(1.0f));
-	// All planets use the same amibent and diffuse color.
-	setUniformVec4(program, "planetAmbient", glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
-	setUniformVec4(program, "planetDiffuse", glm::vec4(1.1f));
-	setUniformVec4(program, "planetEmission", glm::vec4(0.9f));
 
 	programs[FLAT] = setup_shader(readfile("shader/vs_flat.glsl").c_str(), readfile("shader/fs_flat.glsl").c_str());
 	programs[GOURAUD] = setup_shader(readfile("shader/vs_gouraud.glsl").c_str(), readfile("shader/fs_gouraud.glsl").c_str());
