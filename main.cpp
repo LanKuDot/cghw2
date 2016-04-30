@@ -354,13 +354,13 @@ void initalPlanets()
 
 	// Initialize the position of 4 planets
 	objects[1].model = glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(-7.5f, 0.0f, 0.0f)),
-			glm::vec3(1.7f));
+			glm::vec3(2.0f));
 	objects[2].model = glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(-2.5f, 0.0f, 0.0f)),
-			glm::vec3(1.7f));
+			glm::vec3(2.0f));
 	objects[3].model = glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(2.5f, 0.0f, 0.0f)),
-			glm::vec3(1.7f));
+			glm::vec3(2.0f));
 	objects[4].model = glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(7.5f, 0.0f, 0.0f)),
-			glm::vec3(1.7f));
+			glm::vec3(2.0f));
 
 	// Initialize the model matrix, the position, and the light color of the SUN.
 	objects[0].model = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
