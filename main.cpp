@@ -374,7 +374,7 @@ void initalPlanets()
 	flatObject_ID = add_obj(programs[FLAT], "earth.obj", "texture/saturn.bmp");
 	add_obj(programs[GOURAUD], "earth.obj", "texture/saturn.bmp");
 	add_obj(programs[PHONG], "earth.obj", "texture/saturn.bmp");
-	add_obj(program, "earth.obj", "texture/earth.bmp");	// For blinn-phong shading
+	add_obj(programs[BLINN_PHONG], "earth.obj", "texture/saturn.bmp");
 
 	// Initialize the position of 4 planets
 	objects[1].model = glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(-7.5f, 0.0f, 0.0f)),
@@ -427,9 +427,10 @@ void initialShader()
 	programs[FLAT] = setup_shader(readfile("shader/vs_flat.glsl").c_str(), readfile("shader/fs_flat.glsl").c_str());
 	programs[GOURAUD] = setup_shader(readfile("shader/vs_gouraud.glsl").c_str(), readfile("shader/fs_gouraud.glsl").c_str());
 	programs[PHONG] = setup_shader(readfile("shader/vs_phong.glsl").c_str(), readfile("shader/fs_phong.glsl").c_str());
+	programs[BLINN_PHONG] = setup_shader(readfile("shader/vs_blinn.glsl").c_str(), readfile("shader/fs_blinn.glsl").c_str());
 
 	// Initialize the uniform variables
-	for(int i = 0; i < 3; ++i) {
+	for(int i = 0; i < NUM_OF_SHADER; ++i) {
 		setUniformMat4(programs[i], "vp", vp);
 		setUniformVec4(programs[i], "viewPosition", glm::vec4(viewPosition, 0.0f));
 		setUniformVec4(programs[i], "lightPosition", glm::vec4(0.0f, 10.0f, 10.0f, 0.0f));
