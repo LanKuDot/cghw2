@@ -23,8 +23,15 @@ struct object_struct{
 };
 
 std::vector<object_struct> objects;//vertex array object,vertex buffer object and texture(color) for objs
-unsigned int program, program_flat;
 std::vector<int> indicesCount;//Number of indice of objs
+
+/* The ID corresponding to the shader type of shader program */
+#define FLAT 0
+#define GOURAUD 1
+#define PHONG 2
+#define BLINN_PHONG 3
+#define NUM_OF_SHADER 4
+unsigned int program, programs[NUM_OF_SHADER];
 
 static void error_callback(int error, const char* description)
 {
@@ -362,7 +369,7 @@ void initalPlanets()
 {
 	// Add planets to the rendering list
 	add_obj(program, "sun.obj", "texture/sun.bmp");
-	add_obj(program_flat, "earth.obj", "texture/saturn.bmp");	// For flat shading
+	add_obj(programs[FLAT], "earth.obj", "texture/saturn.bmp");	// For flat shading
 	add_obj(program, "earth.obj", "texture/earth.bmp");	// For gouraud shading
 	add_obj(program, "earth.obj", "texture/earth.bmp");	// For phong shading
 	add_obj(program, "earth.obj", "texture/earth.bmp");	// For blinn-phong shading
@@ -415,15 +422,18 @@ void initialShader()
 	setUniformVec4(program, "planetDiffuse", glm::vec4(1.1f));
 	setUniformVec4(program, "planetEmission", glm::vec4(0.9f));
 
-	// Flat shading program
-	program_flat = setup_shader(readfile("shader/vs_flat.glsl").c_str(), readfile("shader/fs_flat.glsl").c_str());
-	setUniformMat4(program_flat, "vp", vp);
-	setUniformVec4(program_flat, "viewPosition", glm::vec4(viewPosition, 0.0f));
-	setUniformVec4(program_flat, "lightPosition", glm::vec4(10.0f, 10.0f, 10.0f, 0.0f));
-	setUniformVec4A(program_flat, "light", 3, light);
-	setUniformVec4A(program_flat, "k", 3, k);
-	setUniformFloat(program_flat, "shininess", 10.0f);
-	setUniformFloatA(program_flat, "d_factor", 3, d_factor);
+	programs[FLAT] = setup_shader(readfile("shader/vs_flat.glsl").c_str(), readfile("shader/fs_flat.glsl").c_str());
+
+	// Initialize the uniform variables
+	for(int i = 0; i < 1; ++i) {
+		setUniformMat4(programs[i], "vp", vp);
+		setUniformVec4(programs[i], "viewPosition", glm::vec4(viewPosition, 0.0f));
+		setUniformVec4(programs[i], "lightPosition", glm::vec4(10.0f, 10.0f, 10.0f, 0.0f));
+		setUniformVec4A(programs[i], "light", 3, light);
+		setUniformVec4A(programs[i], "k", 3, k);
+		setUniformFloat(programs[i], "shininess", 10.0f);
+		setUniformFloatA(programs[i], "d_factor", 3, d_factor);
+	}
 }
 
 /* Update the model matrix of each planet per frame accroding to the status of the earth.
