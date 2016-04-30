@@ -396,9 +396,9 @@ void initialShader()
 {
 	glm::vec3 viewPosition = glm::vec3(0.0f, 0.0f, 20.0f);
 	glm::vec4 k[3] = {
-		glm::vec4(0.1f, 0.1f, 0.1f, 0.0f),	// Ambient
-		glm::vec4(0.8f, 0.8f, 0.8f, 0.0f),	// Diffuse
-		glm::vec4(0.8f, 0.8f, 0.8f, 0.0f)	// Specular
+		glm::vec4(0.2f, 0.2f, 0.2f, 0.0f),	// Ambient
+		glm::vec4(0.9f, 0.9f, 0.9f, 0.0f),	// Diffuse
+		glm::vec4(0.9f, 0.9f, 0.9f, 0.0f)	// Specular
 	};
 	glm::vec4 light[3] = {
 		glm::vec4(1.0f, 1.0f, 1.0f, 0.0f),	// Ambient
