@@ -295,6 +295,14 @@ static void setUniformFloat(unsigned int program, const std::string &name, const
 
 	glUniform1f(loc, f);
 }
+static void setUniformFloatA(unsigned int program, const std::string &name, const int count, const float* f_array)
+{
+	glUseProgram(program);
+	GLint loc = glGetUniformLocation(program, name.c_str());
+	if (loc == -1) return;
+
+	glUniform1fv(loc, count, f_array);
+}
 
 /* The same as setUniformMat4 but set a vec4 value.
  * Parameter:
@@ -387,6 +395,8 @@ void initialShader()
 		glm::vec4(1.0f, 1.0f, 1.0f, 0.0f),	// Diffuse
 		glm::vec4(1.0f, 1.0f, 1.0f, 0.0f)	// Specular
 	};
+	float d_factor[3] = {1.0f, 0.01f, 0.01f};
+
 	// Matrix of MVP: M_pers * M_camera * M_model
 	// - Model translation: orignal, no scale, no rotation.
 	// - Camera: eye @ ( 0, 0, 20 ), look @ ( 0, 0, 0 ), Vup = ( 0, 1, 0 ).
@@ -412,6 +422,7 @@ void initialShader()
 	setUniformVec4A(program_flat, "light", 3, light);
 	setUniformMat4(program_flat, "vp", vp);
 	setUniformFloat(program_flat, "shininess", 10.0f);
+	setUniformFloatA(program_flat, "d_factor", 3, d_factor);
 }
 
 /* Update the model matrix of each planet per frame accroding to the status of the earth.

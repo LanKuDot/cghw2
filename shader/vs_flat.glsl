@@ -16,6 +16,7 @@ uniform vec4 lightPosition;
 uniform vec4 light[3];
 uniform vec4 k[3];	// The refelection factor of material
 uniform float shininess;
+uniform float d_factor[3];	// The factor of distance quadratic funtion.
 
 out vec2 fTexcoord;
 flat out vec4 phongColor;	// Do not interploation the output color.
@@ -31,10 +32,13 @@ void main()
 	vec4 viewVector = normalize(viewPosition - worldPosition);
 	// reflect(I, N) = I - 2.0 * dot(N, I) * N.
 	vec4 reflectVector = reflect(-lightVector, worldNormal);
+	float D = distance(worldPosition, lightPosition);
+
 	/* Phong reflection model */
 	vec4 diffuse = max(dot(worldNormal, lightVector), 0) * light[DIFFUSE] * k[DIFFUSE];
 	vec4 specular = pow(max(dot(reflectVector, viewVector), 0), shininess) * light[SPECULAR] * k[SPECULAR];
-	phongColor = specular + diffuse + light[AMBIENT] * k[AMBIENT];
+	float distanceFactor = d_factor[0] + d_factor[1] * D + d_factor[2] * D * D;
+	phongColor = (specular + diffuse) / distanceFactor + light[AMBIENT] * k[AMBIENT];
 
 	gl_Position = vp * worldPosition;
 }
