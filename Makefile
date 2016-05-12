@@ -1,4 +1,4 @@
-EXEC = HW2
+EXEC = VIEW
 .PHONY: all
 all: $(EXEC)
 
