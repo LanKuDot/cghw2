@@ -208,7 +208,8 @@ static int add_obj(unsigned int program, const char *filename, const char *texbm
 	// Create spaces for vertex array object, vertex buffer objects, and texture object.
 	glGenVertexArrays(1, &new_node.vao);
 	glGenBuffers(4, new_node.vbo);
-	glGenTextures(1, &new_node.texture);
+	if (texbmp != NULL)
+		glGenTextures(1, &new_node.texture);
 
 	glBindVertexArray(new_node.vao);
 
@@ -228,16 +229,18 @@ static int add_obj(unsigned int program, const char *filename, const char *texbm
 		glEnableVertexAttribArray(1);
 		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
-		glBindTexture(GL_TEXTURE_2D, new_node.texture);
-		unsigned int width, height;
-		unsigned short int bits;
-		unsigned char *bgr=load_bmp(texbmp, &width, &height, &bits);
-		GLenum format = (bits == 24? GL_BGR: GL_BGRA);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, format, GL_UNSIGNED_BYTE, bgr);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
-		glGenerateMipmap(GL_TEXTURE_2D);
-		delete [] bgr;
+		if (texbmp != NULL) {
+			glBindTexture(GL_TEXTURE_2D, new_node.texture);
+			unsigned int width, height;
+			unsigned short int bits;
+			unsigned char *bgr=load_bmp(texbmp, &width, &height, &bits);
+			GLenum format = (bits == 24? GL_BGR: GL_BGRA);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, format, GL_UNSIGNED_BYTE, bgr);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+			glGenerateMipmap(GL_TEXTURE_2D);
+			delete [] bgr;
+		}
 	}
 
 	// Upload normal array
