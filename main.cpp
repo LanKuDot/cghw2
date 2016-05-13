@@ -279,6 +279,7 @@ static void releaseObjects()
 }
 
 static GLuint fbo = 0;	// Reference to frame buffer object.
+static GLuint renderedTexture = 0;	// Reference to the screen rendered texture.
 /* Create a frame buffer for rendering the scene to the texture and bind to the rendering
  * pipeline.
  * Parameter:
@@ -291,10 +292,9 @@ static bool generateFBO(unsigned int width, unsigned int height)
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
 	/* Create and initialize an empty texture */
-	GLuint renderedTexture;
 	glGenTextures(1, &renderedTexture);
 	glBindTexture(GL_TEXTURE_2D, renderedTexture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
 	// When the texture should be magified, use the nearest texture coordinates.
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	// When the texture should be minified, use the nearest texture coordinates.
@@ -532,7 +532,10 @@ int main(int argc, char *argv[])
 	// Initialize the plantes
 	initalPlanets();
 	// Create a frame buffer of which size is the same as the default screen size.
-	generateFBO(800, 600);
+	if (!generateFBO(800, 600)) {
+		std::cout << "Cannot generate fbo!\n" << std::endl;
+		return EXIT_FAILURE;
+	}
 
 	float last, start, sunRotateDeg = 0.0f;
 	last = start = glfwGetTime();
