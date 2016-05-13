@@ -278,6 +278,43 @@ static void releaseObjects()
 	glDeleteProgram(program);
 }
 
+static GLuint fbo = 0;	// Reference to frame buffer object.
+/* Create a frame buffer for rendering the scene to the texture and bind to the rendering
+ * pipeline.
+ * Parameter:
+ * - width: The width in pixel of the frame buffer.
+ * - height: The height in pixel of the frame buffer.
+ */
+static bool generateFBO(unsigned int width, unsigned int height)
+{
+	glGenFramebuffers(1, &fbo);
+	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+	/* Create and initialize an empty texture */
+	GLuint renderedTexture;
+	glGenTextures(1, &renderedTexture);
+	glBindTexture(GL_TEXTURE_2D, renderedTexture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+	// When the texture should be magified, use the nearest texture coordinates.
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	// When the texture should be minified, use the nearest texture coordinates.
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+	/* Attach the new texture to the frame buffer */
+	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, renderedTexture, 0);
+	// Set the list of draw buffers
+	GLenum drawBuffers[1] = {GL_COLOR_ATTACHMENT0};
+	glDrawBuffers(1, drawBuffers);
+
+	// Always check that the framebuffer is ok
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		return false;
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	return true;
+}
+
 /* Assign a new value to the mat4 variable of the specified shader program.
  * Parameter:
  * - program: At which shader program the mat4 variable that you want to assign is.
@@ -349,7 +386,9 @@ static void setUniformVec4A(unsigned int program, const std::string &name, const
 
 static void render()
 {
+	/* Make OpenGL draw to the frame buffer first. */
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 	for(int i=0;i<objects.size();i++){
 		glUseProgram(objects[i].program);
 		glBindVertexArray(objects[i].vao);
@@ -367,6 +406,7 @@ static void render()
 		glDrawElements(GL_TRIANGLES, indicesCount[i], GL_UNSIGNED_INT, nullptr);
 	}
 	glBindVertexArray(0);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 /* Add planets to the rendering list and initialize the model matrix of the sun.
@@ -489,9 +529,10 @@ int main(int argc, char *argv[])
 
 	// load shader program
 	initialShader();
-
 	// Initialize the plantes
 	initalPlanets();
+	// Create a frame buffer of which size is the same as the default screen size.
+	generateFBO(800, 600);
 
 	float last, start, sunRotateDeg = 0.0f;
 	last = start = glfwGetTime();
