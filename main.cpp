@@ -417,6 +417,14 @@ static void setUniformVec4A(unsigned int program, const std::string &name, const
 	}
 	glUniform4fv(loc, count, float_array);
 }
+static void setUniformVec2(unsigned int program, const std::string &name, const glm::vec2 &vec)
+{
+	glUseProgram(program);
+	GLint loc = glGetUniformLocation(program, name.c_str());
+	if (loc == -1) return;
+
+	glUniform2fv(loc, 1, glm::value_ptr(vec));
+}
 
 /* Create a render object for render plane.
  */
