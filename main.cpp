@@ -37,6 +37,14 @@ static int flatObject_ID;
 static glm::vec3 sunPosition = glm::vec3(0.0f, 10.0f, 15.0f);
 /* Toggle the value by pressing P key. If it's ture, the light will keep rotating. */
 static bool keepRotate = true;
+static GLuint fbo = 0;	// Reference to frame buffer object.
+static GLuint rbo = 0;
+static GLuint renderedTexture = 0;	// Reference to the screen rendered texture.
+static object_struct renderPlane;
+static int renderPlaneIndicesCount;
+
+#define VIEW_WIDTH 800
+#define VIEW_HEIGHT 600
 
 static void error_callback(int error, const char* description)
 {
@@ -277,19 +285,22 @@ static void releaseObjects()
 		glDeleteVertexArrays(1, &objects[i].vao);
 		glDeleteTextures(1, &objects[i].texture);
 		glDeleteBuffers(4, objects[i].vbo);
+		glDeleteProgram(programs[i]);
 	}
 	glDeleteProgram(program);
+
+	glDeleteFramebuffers(1, &fbo);
+	glDeleteVertexArrays(1, &renderPlane.vao);
+	glDeleteBuffers(4, renderPlane.vbo);
+	glDeleteTextures(1, &renderedTexture);
+	glDeleteProgram(renderPlane.program);
+	glDeleteRenderbuffers(1, &rbo);
 }
 
-static GLuint fbo = 0;	// Reference to frame buffer object.
-static GLuint renderedTexture = 0;	// Reference to the screen rendered texture.
 /* Create a frame buffer for rendering the scene to the texture and bind to the rendering
  * pipeline.
- * Parameter:
- * - width: The width in pixel of the frame buffer.
- * - height: The height in pixel of the frame buffer.
  */
-static bool generateFBO(unsigned int width, unsigned int height)
+static bool generateFBO()
 {
 	glGenFramebuffers(1, &fbo);
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
@@ -535,7 +546,7 @@ int main(int argc, char *argv[])
 	// Initialize the plantes
 	initalPlanets();
 	// Create a frame buffer of which size is the same as the default screen size.
-	if (!generateFBO(800, 600)) {
+	if (!generateFBO()) {
 		std::cout << "Cannot generate fbo!\n" << std::endl;
 		return EXIT_FAILURE;
 	}
