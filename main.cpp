@@ -42,6 +42,9 @@ static GLuint rbo = 0;
 static GLuint renderedTexture = 0;	// Reference to the screen rendered texture.
 static object_struct renderPlane;
 static int renderPlaneIndicesCount;
+static glm::mat4 screenVp = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f);
+/* The cooridnate of the mouse position in the world space. */
+static glm::vec2 cursorPosWorld = glm::vec2();
 
 #define VIEW_WIDTH 800
 #define VIEW_HEIGHT 600
@@ -56,6 +59,17 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 		glfwSetWindowShouldClose(window, GL_TRUE);
 	else if (key == GLFW_KEY_P && action == GLFW_PRESS)
 		keepRotate = !keepRotate;
+}
+/* Translate the cursor position from screen to the world space.
+ */
+static void cursor_pos_callback(GLFWwindow* window, double xpos, double ypos)
+{
+	// The coordinate of the screen is (0,0) at top-left corner and
+	// (VIEW_WIDTH, VIEW_HEIGHT) at bottom-right corner.
+	// Futhermore, the coordinate of the clip plane (orthogonal) is (-1,1) at top-left and
+	// (1,-1) at bottom-right corner.
+	cursorPosWorld.x = (xpos/VIEW_WIDTH) * 2.0f - 1.0f;
+	cursorPosWorld.y = (ypos/VIEW_HEIGHT) * -2.0f + 1.0f;
 }
 
 /* Load and compile the vertex shader and fragment shader, and link them to a program object.
@@ -409,8 +423,7 @@ static void setUniformVec4A(unsigned int program, const std::string &name, const
 static void generateRenderPlane()
 {
 	unsigned int program_orthogonal = setup_shader(readfile("shader/vs_fbo.glsl").c_str(), readfile("shader/fs.glsl").c_str());
-	glm::mat4 vp = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f);
-	setUniformMat4(program_orthogonal, "vp", vp);
+	setUniformMat4(program_orthogonal, "vp", screenVp);
 
 	// The render plane is a individual object, so remove from the object list.
 	// For here, create the information of the plane object, and attach the texture later.
@@ -574,8 +587,9 @@ int main(int argc, char *argv[])
 	// Enable vsync
 	glfwSwapInterval(1);
 
-	// Setup input callback
+	// Setup input callback functions
 	glfwSetKeyCallback(window, key_callback);
+	glfwSetCursorPosCallback(window, cursor_pos_callback);
 
 	glEnable(GL_DEPTH_TEST);
 	glCullFace(GL_BACK);
