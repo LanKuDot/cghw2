@@ -421,7 +421,7 @@ static void generateRenderPlane()
 	indicesCount.pop_back();
 
 	// The plane is on X-Z plane, so we need to rotate it to make it on X-Y plane.
-	renderPlane.model = glm::rotate(90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+	renderPlane.model = glm::scale(glm::rotate(90.0f, glm::vec3(1.0f, 0.0f, 0.0f)), glm::vec3(1.0f, 1.0f, 1.13f));
 	setUniformMat4(program_orthogonal, "model", renderPlane.model);
 
 	// Attach the texture which framebuffer would render to to the plane object.
