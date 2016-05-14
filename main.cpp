@@ -453,6 +453,16 @@ static void render()
 	}
 	glBindVertexArray(0);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	/* Render the texture to the plane and output to screen. */
+	glClear(GL_COLOR_BUFFER_BIT);
+	glViewport(0, 0, VIEW_WIDTH, VIEW_HEIGHT);
+	glUseProgram(renderPlane.program);
+	glDisable(GL_DEPTH_TEST);
+	glBindVertexArray(renderPlane.vao);
+	glBindTexture(GL_TEXTURE_2D, renderPlane.texture);
+	glDrawElements(GL_TRIANGLES, renderPlaneIndicesCount, GL_UNSIGNED_INT, nullptr);
+	glBindVertexArray(0);
 }
 
 /* Add planets to the rendering list and initialize the model matrix of the sun.
