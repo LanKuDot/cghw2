@@ -431,8 +431,10 @@ static void generateRenderPlane()
 static void render()
 {
 	/* Make OpenGL draw to the frame buffer first. */
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glEnable(GL_DEPTH_TEST);
+	glViewport(0, 0, VIEW_WIDTH, VIEW_HEIGHT);
 	for(int i=0;i<objects.size();i++){
 		glUseProgram(objects[i].program);
 		glBindVertexArray(objects[i].vao);
