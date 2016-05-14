@@ -398,6 +398,30 @@ static void setUniformVec4A(unsigned int program, const std::string &name, const
 	glUniform4fv(loc, count, float_array);
 }
 
+/* Create a render object for render plane.
+ */
+static void generateRenderPlane()
+{
+	unsigned int program_orthogonal = setup_shader(readfile("shader/vs_fbo.glsl").c_str(), readfile("shader/fs.glsl").c_str());
+	glm::mat4 vp = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f);
+	setUniformMat4(program_orthogonal, "vp", vp);
+
+	// The render plane is a individual object, so remove from the object list.
+	// For here, create the information of the plane object, and attach the texture later.
+	add_obj(program_orthogonal, "plane.obj", NULL);
+	renderPlane = objects.back();
+	objects.pop_back();
+	renderPlaneIndicesCount = indicesCount.back();
+	indicesCount.pop_back();
+
+	// The plane is on X-Z plane, so we need to rotate it to make it on X-Y plane.
+	renderPlane.model = glm::rotate(90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+	setUniformMat4(program_orthogonal, "model", renderPlane.model);
+
+	// Attach the texture which framebuffer would render to to the plane object.
+	renderPlane.texture = renderedTexture;
+}
+
 static void render()
 {
 	/* Make OpenGL draw to the frame buffer first. */
@@ -550,6 +574,7 @@ int main(int argc, char *argv[])
 		std::cout << "Cannot generate fbo!\n" << std::endl;
 		return EXIT_FAILURE;
 	}
+	generateRenderPlane();
 
 	float last, start, sunRotateDeg = 0.0f;
 	last = start = glfwGetTime();
