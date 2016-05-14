@@ -426,12 +426,14 @@ static void setUniformVec2(unsigned int program, const std::string &name, const 
 	glUniform2fv(loc, 1, glm::value_ptr(vec));
 }
 
-/* Create a render object for render plane.
+/* Create a render object for render plane and create correspoding rendering program.
  */
 static void generateRenderPlane()
 {
-	unsigned int program_orthogonal = setup_shader(readfile("shader/vs_fbo.glsl").c_str(), readfile("shader/fs.glsl").c_str());
+	// Set up the rendering program.
+	unsigned int program_orthogonal = setup_shader(readfile("shader/vs_fbo.glsl").c_str(), readfile("shader/fs_fbo.glsl").c_str());
 	setUniformMat4(program_orthogonal, "vp", screenVp);
+	setUniformFloat(program_orthogonal, "circleRadius", 0.1f);
 
 	// The render plane is a individual object, so remove from the object list.
 	// For here, create the information of the plane object, and attach the texture later.
@@ -479,6 +481,7 @@ static void render()
 	glClear(GL_COLOR_BUFFER_BIT);
 	glViewport(0, 0, VIEW_WIDTH, VIEW_HEIGHT);
 	glUseProgram(renderPlane.program);
+	setUniformVec2(renderPlane.program, "cursorPos", cursorPosWorld);
 	glDisable(GL_DEPTH_TEST);
 	glBindVertexArray(renderPlane.vao);
 	glBindTexture(GL_TEXTURE_2D, renderPlane.texture);

@@ -3,10 +3,21 @@
 layout(location=0) out vec4 color;
 
 in vec2 fTexcoord;
+in vec2 pos;
 
 uniform sampler2D uSampler;
+uniform float circleRadius;	// The radius of the circle centering at cursorPos.
+uniform vec2 cursorPos;
+
+float distanceModified(vec2 p0, vec2 p1)
+{
+	return sqrt(pow(p0.x - p1.x, 2) + pow((p0.y - p1.y) * 0.75f, 2));
+}
 
 void main()
 {
-	color = texture(uSampler,fTexcoord + 0.005 * vec2( sin(800*fTexcoord.x), cos(600*fTexcoord.y)));
+	if (distanceModified(pos, cursorPos) < circleRadius)
+		color = vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	else
+		color = texture(uSampler,fTexcoord);
 }

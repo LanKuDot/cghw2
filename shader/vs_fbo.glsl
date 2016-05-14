@@ -9,6 +9,7 @@ uniform mat4 vp;	// View Projection matrix
 // 'out' means vertex shader output for fragment shader
 // fNormal will be interpolated before passing to fragment shader
 out vec2 fTexcoord;
+out vec2 pos;
 
 void main()
 {
@@ -17,4 +18,5 @@ void main()
 	
 	// Transfrom current vertex to clip-space position.
 	gl_Position = vp * model * vec4(position, 1.0);
+	pos = vec2(gl_Position.x, gl_Position.y);
 }
