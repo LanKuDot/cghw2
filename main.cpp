@@ -71,11 +71,11 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 			keepRotate = !keepRotate;
 			break;
 		case GLFW_KEY_UP:
-			magnifyFactor += 0.1f;
+			magnifyFactor += 0.05f;
 			setUniformFloat(renderPlane.program, "magnifyFactor", magnifyFactor);
 			break;
 		case GLFW_KEY_DOWN:
-			magnifyFactor -= 0.1f;
+			magnifyFactor -= 0.05f;
 			setUniformFloat(renderPlane.program, "magnifyFactor", magnifyFactor);
 			break;
 		}
