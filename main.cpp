@@ -53,8 +53,9 @@ static float sigma = 1.0f;	// The sigma of the gaussian function
 #define VIEW_WIDTH 800
 #define VIEW_HEIGHT 600
 
-static void setUniformFloat(unsigned int program, const std::string &name, const float f);
 static void generateGussianKernel3(glm::mat3 &kernel, const float sigma);
+static void setUniformFloat(unsigned int program, const std::string &name, const float f);
+static void setUniformMat3(unsigned int program, const std::string &name, const glm::mat3 &mat);
 
 static void error_callback(int error, const char* description)
 {
@@ -70,14 +71,24 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 		case GLFW_KEY_P:
 			keepRotate = !keepRotate;
 			break;
-		case GLFW_KEY_UP:
+		case GLFW_KEY_UP:	// Zoom in
 			magnifyFactor += 0.05f;
 			setUniformFloat(renderPlane.program, "magnifyFactor", magnifyFactor);
 			break;
-		case GLFW_KEY_DOWN:
+		case GLFW_KEY_DOWN:	// Zoom out
 			magnifyFactor -= 0.05f;
 			setUniformFloat(renderPlane.program, "magnifyFactor", magnifyFactor);
 			break;
+		case GLFW_KEY_LEFT:	// Not that blur
+			if (sigma == 0.0f) return;
+			sigma -= 0.2f;
+			generateGussianKernel3(gaussianKernel, sigma);
+			setUniformMat3(renderPlane.program, "gaussianKernel", gaussianKernel);
+			break;
+		case GLFW_KEY_RIGHT:
+			sigma += 0.2f;
+			generateGussianKernel3(gaussianKernel, sigma);
+			setUniformMat3(renderPlane.program, "gaussianKernel", gaussianKernel);
 		}
 	}
 }
