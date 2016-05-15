@@ -482,8 +482,8 @@ static void generateRenderPlane()
 	unsigned int program_orthogonal = setup_shader(readfile("shader/vs_fbo.glsl").c_str(), readfile("shader/fs_fbo.glsl").c_str());
 	setUniformMat4(program_orthogonal, "vp", screenVp);
 	setUniformFloat(program_orthogonal, "circleRadius", 0.1f);
-	setUniformFloat(program_orthogonal, "viewRatioYtoX", (float)VIEW_HEIGHT/(float)VIEW_WIDTH);
 	setUniformFloat(program_orthogonal, "magnifyFactor", magnifyFactor);
+	setUniformVec2(program_orthogonal, "viewSize", glm::vec2(VIEW_WIDTH, VIEW_HEIGHT));
 	generateGussianKernel3(gaussianKernel, sigma);
 	setUniformMat3(program_orthogonal, "gussianKernel", gaussianKernel);
 
