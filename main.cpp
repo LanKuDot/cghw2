@@ -434,6 +434,7 @@ static void generateRenderPlane()
 	unsigned int program_orthogonal = setup_shader(readfile("shader/vs_fbo.glsl").c_str(), readfile("shader/fs_fbo.glsl").c_str());
 	setUniformMat4(program_orthogonal, "vp", screenVp);
 	setUniformFloat(program_orthogonal, "circleRadius", 0.1f);
+	setUniformFloat(program_orthogonal, "viewRatioYtoX", (float)VIEW_HEIGHT/(float)VIEW_WIDTH);
 
 	// The render plane is a individual object, so remove from the object list.
 	// For here, create the information of the plane object, and attach the texture later.
