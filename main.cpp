@@ -58,16 +58,23 @@ static void error_callback(int error, const char* description)
 }
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, GL_TRUE);
-	else if (key == GLFW_KEY_P && action == GLFW_PRESS)
-		keepRotate = !keepRotate;
-	else if (key == GLFW_KEY_UP && action == GLFW_PRESS) {
-		magnifyFactor += 0.1f;
-		setUniformFloat(renderPlane.program, "magnifyFactor", magnifyFactor);
-	} else if (key == GLFW_KEY_DOWN && action == GLFW_PRESS) {
-		magnifyFactor -= 0.1f;
-		setUniformFloat(renderPlane.program, "magnifyFactor", magnifyFactor);
+	if (action == GLFW_PRESS) {
+		switch(key) {
+		case GLFW_KEY_ESCAPE:
+			glfwSetWindowShouldClose(window, GL_TRUE);
+			break;
+		case GLFW_KEY_P:
+			keepRotate = !keepRotate;
+			break;
+		case GLFW_KEY_UP:
+			magnifyFactor += 0.1f;
+			setUniformFloat(renderPlane.program, "magnifyFactor", magnifyFactor);
+			break;
+		case GLFW_KEY_DOWN:
+			magnifyFactor -= 0.1f;
+			setUniformFloat(renderPlane.program, "magnifyFactor", magnifyFactor);
+			break;
+		}
 	}
 }
 /* Translate the cursor position from screen to the world space.
