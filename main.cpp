@@ -45,9 +45,12 @@ static int renderPlaneIndicesCount;
 static glm::mat4 screenVp = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f);
 /* The cooridnate of the mouse position in the world space. */
 static glm::vec2 cursorPosWorld = glm::vec2();
+static float magnifyFactor = 0.2f;
 
 #define VIEW_WIDTH 800
 #define VIEW_HEIGHT 600
+
+static void setUniformFloat(unsigned int program, const std::string &name, const float f);
 
 static void error_callback(int error, const char* description)
 {
@@ -59,6 +62,13 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 		glfwSetWindowShouldClose(window, GL_TRUE);
 	else if (key == GLFW_KEY_P && action == GLFW_PRESS)
 		keepRotate = !keepRotate;
+	else if (key == GLFW_KEY_UP && action == GLFW_PRESS) {
+		magnifyFactor += 0.1f;
+		setUniformFloat(renderPlane.program, "magnifyFactor", magnifyFactor);
+	} else if (key == GLFW_KEY_DOWN && action == GLFW_PRESS) {
+		magnifyFactor -= 0.1f;
+		setUniformFloat(renderPlane.program, "magnifyFactor", magnifyFactor);
+	}
 }
 /* Translate the cursor position from screen to the world space.
  */
@@ -435,6 +445,7 @@ static void generateRenderPlane()
 	setUniformMat4(program_orthogonal, "vp", screenVp);
 	setUniformFloat(program_orthogonal, "circleRadius", 0.1f);
 	setUniformFloat(program_orthogonal, "viewRatioYtoX", (float)VIEW_HEIGHT/(float)VIEW_WIDTH);
+	setUniformFloat(program_orthogonal, "magnifyFactor", magnifyFactor);
 
 	// The render plane is a individual object, so remove from the object list.
 	// For here, create the information of the plane object, and attach the texture later.
