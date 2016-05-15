@@ -10,6 +10,7 @@
 #include <glm/gtx/rotate_vector.hpp>
 #include <vector>
 #include "tiny_obj_loader.h"
+#include "gaussianFunction.h"
 
 #define GLM_FORCE_RADIANS
 
@@ -46,11 +47,14 @@ static glm::mat4 screenVp = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f);
 /* The cooridnate of the mouse position in the world space. */
 static glm::vec2 cursorPosWorld = glm::vec2();
 static float magnifyFactor = 0.2f;
+static glm::mat3 gaussianKernel = glm::mat3();
+static float sigma = 1.0f;	// The sigma of the gaussian function
 
 #define VIEW_WIDTH 800
 #define VIEW_HEIGHT 600
 
 static void setUniformFloat(unsigned int program, const std::string &name, const float f);
+static void generateGussianKernel3(glm::mat3 &kernel, const float sigma);
 
 static void error_callback(int error, const char* description)
 {
@@ -87,6 +91,25 @@ static void cursor_pos_callback(GLFWwindow* window, double xpos, double ypos)
 	// (1,-1) at bottom-right corner.
 	cursorPosWorld.x = (xpos/VIEW_WIDTH) * 2.0f - 1.0f;
 	cursorPosWorld.y = (ypos/VIEW_HEIGHT) * -2.0f + 1.0f;
+}
+
+static void generateGussianKernel3(glm::mat3 &kernel, const float sigma)
+{
+	int dx, dy;
+	float totalValue = 0.0f;
+	for (int x = 0; x < 3; ++x)
+		for (int y = 0; y < 3; ++y) {
+			dx = x - 1; dy = y - 1;	// dx = x - (kernelSize>>1)
+			// Matrix in OpenGL is column major.
+			kernel[x][y] = gaussianFunction(dx, dy, sigma);
+			totalValue += kernel[x][y];
+		}
+
+	// Normalize
+	for (int x = 0; x < 3; ++x)
+		for (int y = 0; y < 3; ++y) {
+			kernel[x][y] /= totalValue;
+		}
 }
 
 /* Load and compile the vertex shader and fragment shader, and link them to a program object.
@@ -453,6 +476,7 @@ static void generateRenderPlane()
 	setUniformFloat(program_orthogonal, "circleRadius", 0.1f);
 	setUniformFloat(program_orthogonal, "viewRatioYtoX", (float)VIEW_HEIGHT/(float)VIEW_WIDTH);
 	setUniformFloat(program_orthogonal, "magnifyFactor", magnifyFactor);
+	generateGussianKernel3(gaussianKernel, sigma);
 
 	// The render plane is a individual object, so remove from the object list.
 	// For here, create the information of the plane object, and attach the texture later.
