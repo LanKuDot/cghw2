@@ -16,8 +16,11 @@ float distanceModified(vec2 p0, vec2 p1)
 
 void main()
 {
-	if (distanceModified(pos, cursorPos) < circleRadius)
-		color = vec4(1.0f, 1.0f, 1.0f, 1.0f);
-	else
-		color = texture(uSampler,fTexcoord);
+	if (distanceModified(pos, cursorPos) < circleRadius) {
+		vec2 diff = pos - cursorPos;
+		diff.y = diff.y * 0.75f;
+		// Make the pixel in the circle pick the inner texture.
+		color = texture(uSampler, fTexcoord - diff*0.2f);
+	} else
+		color = texture(uSampler, fTexcoord);
 }
