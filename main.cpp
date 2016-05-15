@@ -485,7 +485,7 @@ static void generateRenderPlane()
 	setUniformFloat(program_orthogonal, "magnifyFactor", magnifyFactor);
 	setUniformVec2(program_orthogonal, "viewSize", glm::vec2(VIEW_WIDTH, VIEW_HEIGHT));
 	generateGussianKernel3(gaussianKernel, sigma);
-	setUniformMat3(program_orthogonal, "gussianKernel", gaussianKernel);
+	setUniformMat3(program_orthogonal, "gaussianKernel", gaussianKernel);
 
 	// The render plane is a individual object, so remove from the object list.
 	// For here, create the information of the plane object, and attach the texture later.
