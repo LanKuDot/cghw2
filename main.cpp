@@ -407,6 +407,14 @@ static void setUniformMat4(unsigned int program, const std::string &name, const 
 	// we don't need to transpose it. so..GL_FALSE
 	glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(mat));
 }
+static void setUniformMat3(unsigned int program, const std::string &name, const glm::mat3 &mat)
+{
+	glUseProgram(program);
+	GLint loc = glGetUniformLocation(program, name.c_str());
+	if (loc == -1) return;
+
+	glUniformMatrix3fv(loc, 1, GL_FALSE, glm::value_ptr(mat));
+}
 
 /* The same as setUniformMat4 but set a float value.
  * Parameter:
@@ -477,6 +485,7 @@ static void generateRenderPlane()
 	setUniformFloat(program_orthogonal, "viewRatioYtoX", (float)VIEW_HEIGHT/(float)VIEW_WIDTH);
 	setUniformFloat(program_orthogonal, "magnifyFactor", magnifyFactor);
 	generateGussianKernel3(gaussianKernel, sigma);
+	setUniformMat3(program_orthogonal, "gussianKernel", gaussianKernel);
 
 	// The render plane is a individual object, so remove from the object list.
 	// For here, create the information of the plane object, and attach the texture later.

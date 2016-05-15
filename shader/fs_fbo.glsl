@@ -10,6 +10,7 @@ uniform float circleRadius;	// The radius of the circle centering at cursorPos.
 uniform float viewRatioYtoX;
 uniform float magnifyFactor;
 uniform vec2 cursorPos;
+uniform mat3 gussianKernel;
 
 float distanceModified(vec2 p0, vec2 p1)
 {
